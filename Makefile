@@ -7,19 +7,21 @@
 JAVAPATH=$(wildcard /usr/lib/jvm/java-1.6.0-openjdk-*/bin/)
 
 # Verwendete Rosetta-Version
-ROSETTAVERSION=3.2.1
+ROSETTAVERSION=3.2.0
 
 # Pfad zum Rosetta-SDK
 ROSETTASDK=/exlibris/dps/d4_1/system.dir/dps-sdk-${ROSETTAVERSION}/lib/
 # Pfad zum Rosetta-SDK, Deposit-Module
 ROSETTASDKDEPOSIT=${ROSETTASDK}/../dps-sdk-projects/dps-sdk-deposit/lib
+ROSETTASDKPLUGINS=${ROSETTASDK}/../../bundled_plugins/
+
 
 # classpath
-CLASSPATH=${ROSETTASDKDEPOSIT}/../src/:${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar:${ROSETTASDKDEPOSIT}/dps-sdk-${ROSETTAVERSION}.jar:${ROSETTASDKDEPOSIT}/log4j-1.2.14.jar 
+CLASSPATH=${ROSETTASDKDEPOSIT}/../src/:${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar:${ROSETTASDKDEPOSIT}/dps-sdk-${ROSETTAVERSION}.jar:${ROSETTASDKDEPOSIT}/log4j-1.2.14.jar:${ROSETTASDKPLUGINS}/NFSStoragePlugin.jar
 
 # sources
 
-SOURCES=java/SLUBStoragePlugin.java
+SOURCES=java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java
 OBJS=$(SOURCES:.java=.class)
 
 
@@ -42,6 +44,7 @@ jarclean:
 clean: jarclean
 	@rm -Rf doc/
 	@rm -f *.class *.jar *.sh
+	@rm -f $(OBJS)
 
 distclean: clean
 	@rm -f *~
