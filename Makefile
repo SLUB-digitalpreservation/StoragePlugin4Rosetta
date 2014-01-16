@@ -7,7 +7,7 @@
 JAVAPATH=$(wildcard /usr/lib/jvm/java-1.6.0-openjdk-*/bin/)
 
 # Verwendete Rosetta-Version
-ROSETTAVERSION=3.2.0
+ROSETTAVERSION=3.2.1
 
 # Pfad zum Rosetta-SDK
 ROSETTASDK=/exlibris/dps/d4_1/system.dir/dps-sdk-${ROSETTAVERSION}/lib/
@@ -19,15 +19,14 @@ CLASSPATH=${ROSETTASDKDEPOSIT}/../src/:${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar:$
 
 # sources
 
-SOURCES=Goobi_Submission_Application.java Goobi_Get_Deposit_Status.java
-TARGETS=$(SOURCES:.java=.sh)
+SOURCES=java/SLUBStoragePlugin.java
+OBJS=$(SOURCES:.java=.class)
 
 
-all: $(TARGETS)
+all: $(OBJS)
 
 help:
-	@echo "erzeugt Submission-Application, die vorbereitete Verzeichnisse per Java SDK"
-	@echo "von ExLibris an Rosetta übergibt."
+	@echo "erzeugt Storage-Plugin für Rosetta von Exlibris"
 	@echo ""
 	@echo "Das Argument 'clean' löscht temporäre Dateien, 'help' gibt diese Hilfe aus und"
 	@echo "'compile' erzeugt ein JAR-File und ein Bash-Script welches das Java-Programm"
@@ -48,18 +47,6 @@ distclean: clean
 	@rm -f *~
 
 .PRECIOUS: %.sh %.jar
-
-%.sh: %.jar
-	@echo "#!/bin/bash" > $@
-	@echo "# check if passwd file exists and has correct rights" >>$@
-	@echo 'GSARIGHTS=$$(stat -c "%a" ~/.gsa)' >> $@
-	@echo 'if [ "$$GSARIGHTS" != 400 ]; then' >> $@
-	@echo '  echo "ERROR: passwd-file '~/.gsa' does not have correct rights"' >> $@
-	@echo '  exit 999' >> $@
-	@echo 'fi' >> $@
-	@echo 'echo "$$CLASSPATH"' >> $@
-	@echo 'java -jar java/$< $$1 $$2 $$3 $$4 $$5 $$6 $$7' >> $@
-
 
 %.jar: %.class
 	# setze temporären Link zu kompilierten Files des Rosetta-SDK, Deposit-Module
