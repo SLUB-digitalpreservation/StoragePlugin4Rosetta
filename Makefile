@@ -1,0 +1,97 @@
+#!/bin/bash
+# Andreas Romeyke, SLUB Dresden
+# erzeugt Submission-Application, die vorbereitete Verzeichnisse per Java SDK
+# von ExLibris an Rosetta übergibt.
+
+# Pfad zu Java 6
+JAVAPATH=$(wildcard /usr/lib/jvm/java-1.6.0-openjdk-*/bin/)
+
+# Verwendete Rosetta-Version
+ROSETTAVERSION=3.2.0
+
+# Pfad zum Rosetta-SDK
+ROSETTASDK=/exlibris/dps/d4_1/system.dir/dps-sdk-${ROSETTAVERSION}/lib/
+# Pfad zum Rosetta-SDK, Deposit-Module
+ROSETTASDKDEPOSIT=${ROSETTASDK}/../dps-sdk-projects/dps-sdk-deposit/lib
+
+# classpath
+CLASSPATH=${ROSETTASDKDEPOSIT}/../src/:${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar:${ROSETTASDKDEPOSIT}/dps-sdk-${ROSETTAVERSION}.jar:${ROSETTASDKDEPOSIT}/log4j-1.2.14.jar 
+
+# sources
+
+SOURCES=Goobi_Submission_Application.java Goobi_Get_Deposit_Status.java
+TARGETS=$(SOURCES:.java=.sh)
+
+
+all: $(TARGETS)
+
+help:
+	@echo "erzeugt Submission-Application, die vorbereitete Verzeichnisse per Java SDK"
+	@echo "von ExLibris an Rosetta übergibt."
+	@echo ""
+	@echo "Das Argument 'clean' löscht temporäre Dateien, 'help' gibt diese Hilfe aus und"
+	@echo "'compile' erzeugt ein JAR-File und ein Bash-Script welches das Java-Programm"
+	@echo "aufruft."
+
+jarclean: 
+	@rm -Rf  \
+	com/  \
+	org/ gov/ srw/ uk/ nbnDe11112004033116 PLUGIN_INF repackage  \
+	schemaorg_apache_xmlbeans META-INF NOTICE.txt \
+	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
+
+clean: jarclean
+	@rm -Rf doc/
+	@rm -f *.class *.jar *.sh
+
+distclean: clean
+	@rm -f *~
+
+.PRECIOUS: %.sh %.jar
+
+%.sh: %.jar
+	@echo "#!/bin/bash" > $@
+	@echo "# check if passwd file exists and has correct rights" >>$@
+	@echo 'GSARIGHTS=$$(stat -c "%a" ~/.gsa)' >> $@
+	@echo 'if [ "$$GSARIGHTS" != 400 ]; then' >> $@
+	@echo '  echo "ERROR: passwd-file '~/.gsa' does not have correct rights"' >> $@
+	@echo '  exit 999' >> $@
+	@echo 'fi' >> $@
+	@echo 'echo "$$CLASSPATH"' >> $@
+	@echo 'java -jar java/$< $$1 $$2 $$3 $$4 $$5 $$6 $$7' >> $@
+
+
+%.jar: %.class
+	# setze temporären Link zu kompilierten Files des Rosetta-SDK, Deposit-Module
+	@${JAVAPATH}/jar xf ${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar
+	@${JAVAPATH}/jar xf ${ROSETTASDKDEPOSIT}/dps-sdk-${ROSETTAVERSION}.jar
+	@${JAVAPATH}/jar xf ${ROSETTASDKDEPOSIT}/log4j-1.2.14.jar
+	@cp -a  ${ROSETTASDKDEPOSIT}/../src/com .
+	@echo "Main-Class: $(basename $@)" > manifest.txt
+	# Komprimiere alle class-Files zusammen
+	@${JAVAPATH}/jar cfm $@ manifest.txt \
+	com/ *.class \
+	org/ gov/ srw/ uk/ nbnDe11112004033116 PLUGIN_INF repackage  \
+	schemaorg_apache_xmlbeans META-INF \
+	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt
+	# Lösche temporären Link
+	@rm -Rf  \
+	com/  \
+	org/ gov/ srw/ uk/ nbnDe11112004033116 PLUGIN_INF repackage  \
+	schemaorg_apache_xmlbeans META-INF NOTICE.txt \
+	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
+
+%.class: %.java
+	${JAVAPATH}/javac -classpath ${CLASSPATH} $< 
+
+doc: $(SOURCES)
+	javadoc -d doc/ $^
+
+check_prerequisites:
+	@echo -n "### Checking java path: $(JAVAPATH) ...."
+	@if [ -e $(JAVAPATH) ]; then echo "fine :)"; else echo " not found! :("; fi
+	@echo -n "### Checking Exlibris Rosetta SDK path: $(ROSETTASDK) ...."
+	@if [ -e $(ROSETTASDK) ]; then echo "fine :)"; else echo " not found! :("; fi
+
+.PHONY: help clean distclean jarclean check_prerequisites
+
