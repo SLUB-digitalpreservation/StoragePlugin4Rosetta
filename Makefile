@@ -17,11 +17,14 @@ ROSETTASDKPLUGINS=${ROSETTASDK}/../../bundled_plugins/
 
 
 # classpath
-CLASSPATH=${ROSETTASDKDEPOSIT}/../src/:${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar:${ROSETTASDKDEPOSIT}/dps-sdk-${ROSETTAVERSION}.jar:${ROSETTASDKDEPOSIT}/log4j-1.2.14.jar:${ROSETTASDKPLUGINS}/NFSStoragePlugin.jar
+JUNITCLASSPATH=/usr/share/java/junit4.jar
+#SOURCESCLASSPATH=org/slub/rosetta/dps/repository/plugin/storage/nfs
+CLASSPATH=./java:${ROSETTASDKDEPOSIT}/../src/:${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar:${ROSETTASDKDEPOSIT}/dps-sdk-${ROSETTAVERSION}.jar:${ROSETTASDKDEPOSIT}/log4j-1.2.14.jar:${ROSETTASDKPLUGINS}/NFSStoragePlugin.jar
 
 # sources
 
-SOURCES=java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java
+SOURCES=java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java\
+	java/org/slub/rosetta/dps/repository/plugin/storage/nfs/testSLUBStoragePlugin.java
 OBJS=$(SOURCES:.java=.class)
 
 
@@ -41,13 +44,16 @@ jarclean:
 	schemaorg_apache_xmlbeans META-INF NOTICE.txt \
 	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
 
+test:   $(OBJS) 
+	java -cp ${CLASSPATH}:$(JUNITCLASSPATH) org.junit.runner.JUnitCore org.slub.rosetta.dps.repository.plugin.storage.nfs.testSLUBStoragePlugin
+
 clean: jarclean
 	@rm -Rf doc/
-	@rm -f *.class *.jar *.sh
-	@rm -f $(OBJS)
+	find ./ -name "*.class" -exec rm -f \{\} \;
 
 distclean: clean
-	@rm -f *~
+	find ./ -name "*~" -exec rm -f \{\} \;
+	@rm -Rf null
 
 .PRECIOUS: %.sh %.jar
 
@@ -72,7 +78,7 @@ distclean: clean
 	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
 
 %.class: %.java
-	${JAVAPATH}/javac -classpath ${CLASSPATH} $< 
+	${JAVAPATH}/javac -classpath ${CLASSPATH}:${JUNITCLASSPATH} $< 
 
 doc: $(SOURCES)
 	javadoc -d doc/ $^
@@ -83,5 +89,5 @@ check_prerequisites:
 	@echo -n "### Checking Exlibris Rosetta SDK path: $(ROSETTASDK) ...."
 	@if [ -e $(ROSETTASDK) ]; then echo "fine :)"; else echo " not found! :("; fi
 
-.PHONY: help clean distclean jarclean check_prerequisites
+.PHONY: help clean distclean jarclean test
 

@@ -72,7 +72,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         return relativeDirectoryPath;
     }
  
-    private File getStreamDirectory(String path, String fileName) {
+    protected File getStreamDirectory(String path, String fileName) {
  
         File newDir = new File(parameters.get(DIR_ROOT) + File.separator + path);
         newDir.mkdirs();
