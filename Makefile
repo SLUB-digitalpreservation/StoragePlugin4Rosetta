@@ -78,7 +78,7 @@ distclean: clean
 	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
 
 %.class: %.java
-	${JAVAPATH}/javac -classpath ${CLASSPATH}:${JUNITCLASSPATH} $< 
+	${JAVAPATH}/javac -classpath ${CLASSPATH}:${JUNITCLASSPATH} -Xlint:deprecation $< 
 
 doc: $(SOURCES)
 	javadoc -d doc/ $^
