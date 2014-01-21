@@ -23,7 +23,7 @@ import com.exlibris.digitool.infrastructure.utils.Checksummer;
  */
 public class SLUBStoragePlugin extends NFSStoragePlugin {
     private static final String DIR_ROOT = "DIR_ROOT";
-    private static final ExLogger log = ExLogger.getExLogger(NFSStoragePlugin.class);
+    private static final ExLogger log = ExLogger.getExLogger(SLUBStoragePlugin.class);
     public SLUBStoragePlugin() {
         super();
     }
@@ -57,13 +57,13 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         // get IE PID by calling IE-DNX record and search for ""internalIdentifierType" == "PID"
         DnxDocument iedoc = storedEntityMetaData.getIeDnx();
         String iepid = iedoc.getSectionKeyValue("internalIdentifierType", "PID");
-        log.debug("SLUBStoragePlugin iepid=" + iepid);
+        log.error("SLUBStoragePlugin iepid=" + iepid);
         String datestring = iedoc.getSectionKeyValue("objectCharacteristics", "creationDate");
         Calendar date = Calendar.getInstance();
         // date: 2014-01-15 14:28:01
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
         date.setTime(sdf.parse(datestring));
-        log.debug("SLUBStoragePlugin creation Date read=" + datestring + " parsed=" + date.toString());
+        log.error("SLUBStoragePlugin creation Date read=" + datestring + " parsed=" + date.toString());
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("yyyy").format(date);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(date);
@@ -72,7 +72,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
         relativeDirectoryPath = relativeDirectoryPath + iepid;
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
-        log.debug("SLUBStoragePlugin relativeDirectoryPath=" + relativeDirectoryPath);
+        log.error("SLUBStoragePlugin relativeDirectoryPath=" + relativeDirectoryPath);
         return relativeDirectoryPath;
     }
  

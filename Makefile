@@ -28,7 +28,7 @@ SOURCES=java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugi
 OBJS=$(SOURCES:.java=.class)
 
 
-all: $(OBJS)
+all: SLUBStoragePlugin.jar
 
 help:
 	@echo "erzeugt Storage-Plugin für Rosetta von Exlibris"
@@ -37,12 +37,8 @@ help:
 	@echo "'compile' erzeugt ein JAR-File und ein Bash-Script welches das Java-Programm"
 	@echo "aufruft."
 
-jarclean: 
-	@rm -Rf  \
-	com/  \
-	org/ gov/ srw/ uk/ nbnDe11112004033116 PLUGIN_INF repackage  \
-	schemaorg_apache_xmlbeans META-INF NOTICE.txt \
-	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
+jarclean:
+	@rm -Rf build
 
 test:   $(OBJS) 
 	java -cp ${CLASSPATH}:$(JUNITCLASSPATH) org.junit.runner.JUnitCore org.slub.rosetta.dps.repository.plugin.storage.nfs.testSLUBStoragePlugin
@@ -50,6 +46,7 @@ test:   $(OBJS)
 clean: jarclean
 	@rm -Rf doc/
 	find ./ -name "*.class" -exec rm -f \{\} \;
+	@rm -Rf SLUBStoragePlugin.jar
 
 distclean: clean
 	find ./ -name "*~" -exec rm -f \{\} \;
@@ -76,6 +73,13 @@ distclean: clean
 	org/ gov/ srw/ uk/ nbnDe11112004033116 PLUGIN_INF repackage  \
 	schemaorg_apache_xmlbeans META-INF NOTICE.txt \
 	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
+
+SLUBStoragePlugin.jar: $(OBJS)
+	@mkdir build;
+	@cp -r PLUGIN-INF/ build/
+	@cp -r META-INF/ build/
+	@cd java; find ./ -name "*.class" -print -exec cp --parents -r \{\} $(PWD)/build \; ; cd ..
+	@cd build; ${JAVAPATH}/jar cfv ../$@ ./* ; cd ..
 
 %.class: %.java
 	${JAVAPATH}/javac -classpath ${CLASSPATH}:${JUNITCLASSPATH} -Xlint:deprecation $< 
