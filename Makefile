@@ -7,7 +7,7 @@
 JAVAPATH=$(wildcard /usr/lib/jvm/java-1.6.0-openjdk-*/bin/)
 
 # Verwendete Rosetta-Version
-ROSETTAVERSION=3.2.0
+ROSETTAVERSION=3.2.1
 
 # Pfad zum Rosetta-SDK
 ROSETTASDK=/exlibris/dps/d4_1/system.dir/dps-sdk-${ROSETTAVERSION}/lib/
@@ -23,8 +23,9 @@ CLASSPATH=./java:${ROSETTASDKDEPOSIT}/../src/:${ROSETTASDKDEPOSIT}/xmlbeans-2.3.
 
 # sources
 
-SOURCES=java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java\
-	java/org/slub/rosetta/dps/repository/plugin/storage/nfs/testSLUBStoragePlugin.java
+#SOURCES=java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java\
+#	java/org/slub/rosetta/dps/repository/plugin/storage/nfs/testSLUBStoragePlugin.java
+SOURCES=java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java
 OBJS=$(SOURCES:.java=.class)
 
 
@@ -45,41 +46,21 @@ test:   $(OBJS)
 
 clean: jarclean
 	@rm -Rf doc/
-	find ./ -name "*.class" -exec rm -f \{\} \;
+	find ./java/org/ -name "*.class" -exec rm -f \{\} \;
 	@rm -Rf SLUBStoragePlugin.jar
 
 distclean: clean
 	find ./ -name "*~" -exec rm -f \{\} \;
 	@rm -Rf null
 
-.PRECIOUS: %.sh %.jar
-
-%.jar: %.class
-	# setze temporären Link zu kompilierten Files des Rosetta-SDK, Deposit-Module
-	@${JAVAPATH}/jar xf ${ROSETTASDKDEPOSIT}/xmlbeans-2.3.0.jar
-	@${JAVAPATH}/jar xf ${ROSETTASDKDEPOSIT}/dps-sdk-${ROSETTAVERSION}.jar
-	@${JAVAPATH}/jar xf ${ROSETTASDKDEPOSIT}/log4j-1.2.14.jar
-	@cp -a  ${ROSETTASDKDEPOSIT}/../src/com .
-	@echo "Main-Class: $(basename $@)" > manifest.txt
-	# Komprimiere alle class-Files zusammen
-	@${JAVAPATH}/jar cfm $@ manifest.txt \
-	com/ *.class \
-	org/ gov/ srw/ uk/ nbnDe11112004033116 PLUGIN_INF repackage  \
-	schemaorg_apache_xmlbeans META-INF \
-	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt
-	# Lösche temporären Link
-	@rm -Rf  \
-	com/  \
-	org/ gov/ srw/ uk/ nbnDe11112004033116 PLUGIN_INF repackage  \
-	schemaorg_apache_xmlbeans META-INF NOTICE.txt \
-	dnx_profile.xls ExLibMessageFile.properties LICENSE.txt manifest.txt
-
 SLUBStoragePlugin.jar: $(OBJS)
 	@mkdir build;
 	@cp -r PLUGIN-INF/ build/
 	@cp -r META-INF/ build/
 	@cd java; find ./ -name "*.class" -print -exec cp --parents -r \{\} $(PWD)/build \; ; cd ..
-	@cd build; ${JAVAPATH}/jar cfv ../$@ ./* ; cd ..
+	@cp /exlibris/dps/d4_1/system.dir/bundled_plugins/NFSStoragePlugin.jar build/
+	#cd build; ${JAVAPATH}/jar xfz /exlibris/dps/d4_1/system.dir/bundled_plugins/NFSStoragePlugin.jar
+	@cd build; ${JAVAPATH}/jar cfvM ../$@ ./* ; cd ..
 
 %.class: %.java
 	${JAVAPATH}/javac -classpath ${CLASSPATH}:${JUNITCLASSPATH} -Xlint:deprecation $< 

@@ -1,12 +1,2 @@
 Manifest-Version: 1.0
-Archiver-Version: Plexus Archiver
-Created-By: Apache Maven
-Built-By: root
-Build-Jdk: 1.6.0_30
-Hudson-Build-Number: 367
-Hudson-Project: Rosetta-3.2.1_Nightly
-Hudson-Version: 1.500
-Jenkins-Build-Number: 367
-Jenkins-Project: Rosetta-3.2.1_Nightly
-Jenkins-Version: 1.500
 

@@ -1,4 +1,3 @@
-//package com.exlibris.dps.repository.plugin.storage.nfs;
 package org.slub.rosetta.dps.repository.plugin.storage.nfs;
  
 import java.io.File;
@@ -8,12 +7,12 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 import com.exlibris.core.infra.common.exceptions.logging.ExLogger;
-import com.exlibris.digitool.common.dnx.DnxDocument;
-import com.exlibris.dps.repository.plugin.storage.nfs.NFSStoragePlugin;
 import com.exlibris.core.infra.common.util.IOUtil;
 import com.exlibris.core.sdk.storage.containers.StoredEntityMetaData;
+import com.exlibris.digitool.common.dnx.DnxDocument;
 import com.exlibris.digitool.common.storage.Fixity;
 import com.exlibris.digitool.infrastructure.utils.Checksummer;
+import com.exlibris.dps.repository.plugin.storage.nfs.NFSStoragePlugin;
 
 /**
  * SLUBStoragePlugin
@@ -26,13 +25,18 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
     private static final ExLogger log = ExLogger.getExLogger(SLUBStoragePlugin.class);
     public SLUBStoragePlugin() {
         super();
+        log.info("SLUBStoragePlugin instantiated");
     }
  
     @Override
     public String storeEntity(InputStream is, StoredEntityMetaData storedEntityMetadata) throws Exception {
+        log.info("SLUBStoragePlugin.storeEntity() called");
         String fileName = createFileName(storedEntityMetadata);
+        log.info("SLUBStoragePlugin.storeEntity() fileName="+fileName);
         String relativeDirectoryPath = getStreamRelativePath(storedEntityMetadata);
+        log.info("SLUBStoragePlugin.storeEntity() relativeDirectoryPath="+relativeDirectoryPath);
         File destFile = getStreamDirectory(relativeDirectoryPath, fileName);
+        log.info("SLUBStoragePlugin.storeEntity() destfile.getAbsolutePath()="+destFile.getAbsolutePath());
         // better move/link
         if (canHandleSourcePath(storedEntityMetadata.getCurrentFilePath())) {
             is.close(); // close input stream so that 'move' can work, we don't use it anyway
@@ -43,6 +47,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
             IOUtil.copy(is, new FileOutputStream(destFile));
         }
         String storedEntityIdentifier = relativeDirectoryPath + File.separator + fileName;
+        log.info("SLUBStoragePlugin.storeEntity() storedEntityIdentifier="+storedEntityIdentifier);
         if(!checkFixity(storedEntityMetadata.getFixities(), storedEntityIdentifier)) {
             deleteEntity(storedEntityIdentifier); // delete corrupt files
             return null;
@@ -57,13 +62,13 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         // get IE PID by calling IE-DNX record and search for ""internalIdentifierType" == "PID"
         DnxDocument iedoc = storedEntityMetaData.getIeDnx();
         String iepid = iedoc.getSectionKeyValue("internalIdentifierType", "PID");
-        log.error("SLUBStoragePlugin iepid=" + iepid);
+        log.info("SLUBStoragePlugin.getStreamRelativePath iepid=" + iepid);
         String datestring = iedoc.getSectionKeyValue("objectCharacteristics", "creationDate");
         Calendar date = Calendar.getInstance();
         // date: 2014-01-15 14:28:01
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
         date.setTime(sdf.parse(datestring));
-        log.error("SLUBStoragePlugin creation Date read=" + datestring + " parsed=" + date.toString());
+        log.info("SLUBStoragePlugin.getStreamRelativePath creation Date read=" + datestring + " parsed=" + date.toString());
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("yyyy").format(date);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(date);
@@ -72,12 +77,15 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
         relativeDirectoryPath = relativeDirectoryPath + iepid;
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
-        log.error("SLUBStoragePlugin relativeDirectoryPath=" + relativeDirectoryPath);
+        log.info("SLUBStoragePlugin.getStreamRelativePath relativeDirectoryPath=" + relativeDirectoryPath);
         return relativeDirectoryPath;
     }
  
     protected File getStreamDirectory(String path, String fileName) {
         File newDir = new File(parameters.get(DIR_ROOT) + File.separator + path);
+        log.info("SLUBStoragePlugin.getStreamDirectory path=" + path);
+        log.info("SLUBStoragePlugin.getStreamDirectory fileName=" + fileName);
+        log.info("SLUBStoragePlugin.getStreamDirectory newDir.getAbsolutePath()=" + newDir.getAbsolutePath());
         newDir.mkdirs();
         return new File(newDir.getAbsolutePath() + File.separator + fileName);
     }
