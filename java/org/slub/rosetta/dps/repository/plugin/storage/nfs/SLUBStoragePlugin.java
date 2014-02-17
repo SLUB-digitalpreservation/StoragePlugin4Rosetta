@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import com.exlibris.core.infra.common.exceptions.logging.ExLogger;
@@ -68,12 +69,13 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         // date: 2014-01-15 14:28:01
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
         date.setTime(sdf.parse(datestring));
+        Date d = date.getTime();
         log.info("SLUBStoragePlugin.getStreamRelativePath creation Date read=" + datestring + " parsed=" + date.toString());
-        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("yyyy").format(date);
+        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("yyyy").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
-        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(date);
+        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
-        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("dd").format(date);
+        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("dd").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
         relativeDirectoryPath = relativeDirectoryPath + iepid;
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
