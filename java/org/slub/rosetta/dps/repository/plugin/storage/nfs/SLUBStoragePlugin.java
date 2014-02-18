@@ -6,11 +6,16 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Iterator;
 
 import com.exlibris.core.infra.common.exceptions.logging.ExLogger;
 import com.exlibris.core.infra.common.util.IOUtil;
 import com.exlibris.core.sdk.storage.containers.StoredEntityMetaData;
 import com.exlibris.digitool.common.dnx.DnxDocument;
+import com.exlibris.digitool.common.dnx.DnxSection;
+import com.exlibris.digitool.common.dnx.DnxSectionRecord;
+import com.exlibris.digitool.common.dnx.DnxRecordKey;
 import com.exlibris.digitool.common.storage.Fixity;
 import com.exlibris.digitool.infrastructure.utils.Checksummer;
 import com.exlibris.dps.repository.plugin.storage.nfs.NFSStoragePlugin;
@@ -24,6 +29,7 @@ import com.exlibris.dps.repository.plugin.storage.nfs.NFSStoragePlugin;
 public class SLUBStoragePlugin extends NFSStoragePlugin {
     private static final String DIR_ROOT = "DIR_ROOT";
     private static final ExLogger log = ExLogger.getExLogger(SLUBStoragePlugin.class);
+    
     public SLUBStoragePlugin() {
         super();
         log.info("SLUBStoragePlugin instantiated");
@@ -59,10 +65,45 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
  
     // path should be of form yyyy/mm/dd/IE-PID/ 
     protected String getStreamRelativePath(StoredEntityMetaData storedEntityMetaData ) throws Exception {
+    	log.info("SLUBStoragePlugin AAB");
         String relativeDirectoryPath = File.separator;
         // get IE PID by calling IE-DNX record and search for ""internalIdentifierType" == "PID"
         DnxDocument iedoc = storedEntityMetaData.getIeDnx();
-        String iepid = iedoc.getSectionKeyValue("internalIdentifierType", "PID");
+        DnxSection iesec = iedoc.getSectionById("internalIdentifier");
+        String iepid = null;
+        log.info ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
+        List<DnxSectionRecord> records = iesec.getRecordList();
+        int foo =0;
+        boolean foundsection = false;
+        for (Iterator<DnxSectionRecord> iter = records.iterator(); iter.hasNext(); ) {
+        	DnxSectionRecord element = iter.next();
+        	foo++;
+        	log.info("SLUBStoragePlugin.getStreamRelativePath foo=" + foo + " element=" + element.toString());
+        	List<DnxRecordKey> keys = element.getKeylist();
+        	// check if right section
+        	for (Iterator<DnxRecordKey> iter2 = keys.iterator(); iter2.hasNext(); ) {
+        		DnxRecordKey ele2 = iter2.next();
+        		log.info("SLUBStoragePlugin.getStreamRelativePath getId=" + ele2.getId());
+        		log.info("SLUBStoragePlugin.getStreamRelativePath getValue=" + ele2.getValue());
+        		if (
+        			(ele2.getId().equals("internalIdentifierType")) && 
+        		  (ele2.getValue().equals("PID"))
+        		) {
+        			foundsection=true;
+        		}
+            log.info("SLUBStoragePlugin.getStreamRelativePath foundsection=" + foundsection);
+        	}
+        	if (foundsection == true) {
+        	  // check pid
+        	  for (Iterator<DnxRecordKey> iter2 = keys.iterator(); iter2.hasNext(); ) {
+        	  	DnxRecordKey ele2 = iter2.next();
+        	   	if (ele2.getId().equals("internalIdentifierValue")) {
+        			  iepid = ele2.getValue();
+        			  foundsection = false;
+        		  }
+        	  }
+        	}
+        }
         log.info("SLUBStoragePlugin.getStreamRelativePath iepid=" + iepid);
         String datestring = iedoc.getSectionKeyValue("objectCharacteristics", "creationDate");
         Calendar date = Calendar.getInstance();
@@ -73,7 +114,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         log.info("SLUBStoragePlugin.getStreamRelativePath creation Date read=" + datestring + " parsed=" + date.toString());
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("yyyy").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
-        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(d);
+        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(d);  // FIXME: check, why stored in 2014/01/18 instead 2014/02/18
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("dd").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
