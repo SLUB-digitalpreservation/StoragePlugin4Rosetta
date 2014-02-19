@@ -35,6 +35,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         log.info("SLUBStoragePlugin instantiated");
     }
  
+    /** copied from NFS Storage Plugin, enhanced with debugging info */
     @Override
     public String storeEntity(InputStream is, StoredEntityMetaData storedEntityMetadata) throws Exception {
         log.info("SLUBStoragePlugin.storeEntity() called");
@@ -63,7 +64,13 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         return storedEntityIdentifier;
     }
  
-    // path should be of form yyyy/mm/dd/IE-PID/ 
+    /** prepare right path
+      * path should be of form yyyy/MM/dd/IE-PID/
+      * we need to findout the associated dnx document (IE),
+      * get the creation date of the IE/SIP
+      * and get the IE PID of the associated IE.
+      * returns the path as string 
+      */
     protected String getStreamRelativePath(StoredEntityMetaData storedEntityMetaData ) throws Exception {
     	log.info("SLUBStoragePlugin AAB");
         String relativeDirectoryPath = File.separator;
@@ -73,48 +80,31 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         String iepid = null;
         log.info ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
         List<DnxSectionRecord> records = iesec.getRecordList();
-        int foo =0;
-        boolean foundsection = false;
         for (Iterator<DnxSectionRecord> iter = records.iterator(); iter.hasNext(); ) {
         	DnxSectionRecord element = iter.next();
-        	foo++;
-        	log.info("SLUBStoragePlugin.getStreamRelativePath foo=" + foo + " element=" + element.toString());
-        	List<DnxRecordKey> keys = element.getKeylist();
-        	// check if right section
-        	for (Iterator<DnxRecordKey> iter2 = keys.iterator(); iter2.hasNext(); ) {
-        		DnxRecordKey ele2 = iter2.next();
-        		log.info("SLUBStoragePlugin.getStreamRelativePath getId=" + ele2.getId());
-        		log.info("SLUBStoragePlugin.getStreamRelativePath getValue=" + ele2.getValue());
-        		if (
-        			(ele2.getId().equals("internalIdentifierType")) && 
-        		  (ele2.getValue().equals("PID"))
-        		) {
-        			foundsection=true;
-        		}
-            log.info("SLUBStoragePlugin.getStreamRelativePath foundsection=" + foundsection);
-        	}
-        	if (foundsection == true) {
-        	  // check pid
-        	  for (Iterator<DnxRecordKey> iter2 = keys.iterator(); iter2.hasNext(); ) {
-        	  	DnxRecordKey ele2 = iter2.next();
-        	   	if (ele2.getId().equals("internalIdentifierValue")) {
-        			  iepid = ele2.getValue();
-        			  foundsection = false;
-        		  }
-        	  }
+        	if (element.getKeyById("internalIdentifierType").getValue().equals("PID")) {
+        		iepid = element.getKeyById("internalIdentifierValue").getValue();
+        		break;
         	}
         }
+        // raise Exception if iepid is null
+        if (null == iepid) {
+        	log.error ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
+        	throw new Exception("error, could not get IEPID for storedEntityMetaData:"+storedEntityMetaData.toString());
+        }
         log.info("SLUBStoragePlugin.getStreamRelativePath iepid=" + iepid);
+        // get creationDate of "objectCharacteristics"
         String datestring = iedoc.getSectionKeyValue("objectCharacteristics", "creationDate");
         Calendar date = Calendar.getInstance();
-        // date: 2014-01-15 14:28:01
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-        date.setTime(sdf.parse(datestring));
-        Date d = date.getTime();
+        // date ist there stored in format (example): 2014-01-15 14:28:01
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setLenient(false); /* if parse errors, do not guess about */
+        Date d = sdf.parse(datestring);
+        date.setTime(d);
         log.info("SLUBStoragePlugin.getStreamRelativePath creation Date read=" + datestring + " parsed=" + date.toString());
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("yyyy").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
-        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(d);  // FIXME: check, why stored in 2014/01/18 instead 2014/02/18
+        relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("MM").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("dd").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
@@ -124,6 +114,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         return relativeDirectoryPath;
     }
  
+    /** copied from NFS Storage Plugin, enhanced with debugging info */
     protected File getStreamDirectory(String path, String fileName) {
         File newDir = new File(parameters.get(DIR_ROOT) + File.separator + path);
         log.info("SLUBStoragePlugin.getStreamDirectory path=" + path);
@@ -133,6 +124,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         return new File(newDir.getAbsolutePath() + File.separator + fileName);
     }
  
+    /** copied from NFS Storage Plugin, enhanced with debugging info */
     private boolean canHandleSourcePath(String srcPath) {
         try {
             File file = new File(srcPath);
