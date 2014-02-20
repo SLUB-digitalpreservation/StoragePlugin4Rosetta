@@ -1,0 +1,15 @@
+The plugin is based on NFSStoragePlugin and writes files in format
+/yyyy/mm/dd/IEPID. Please note, that th pluign could only be used as plugin to
+handle IEs on permanent storage, otherwise it would fail with a NULL-Pointer
+exceptions, because a SIP (as an exampled) does not have an IEPID yet.
+
+To compile the plugin, ensure that the SDK and NFSStorage plugin is located in
+/exlibris as described in Makefile.
+
+The targets for "make" are:
+
+clean: clean up directory
+doc: compile javadoc description
+all: compile and build SLUBStoragePlugin.jar
+
+If any questions ask andreas.romeyke@slub-dresden.de
