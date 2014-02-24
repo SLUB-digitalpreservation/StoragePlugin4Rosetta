@@ -75,8 +75,14 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
     	log.info("SLUBStoragePlugin AAB");
         String relativeDirectoryPath = File.separator;
         // get IE PID by calling IE-DNX record and search for ""internalIdentifierType" == "PID"
+        
         DnxDocument iedoc = storedEntityMetaData.getIeDnx();
+        String entitytype = storedEntityMetaData.getEntityType().name();
         DnxSection iesec = iedoc.getSectionById("internalIdentifier");
+        if (null == iesec) {
+        	log.error ("SLUBStoragePlugin.getStreamRelativePath no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data? You should not!");
+        	throw new Exception("error, no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data? You should not!");
+        }
         String iepid = null;
         log.info ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
         List<DnxSectionRecord> records = iesec.getRecordList();
@@ -90,9 +96,9 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         // raise Exception if iepid is null
         if (null == iepid) {
         	log.error ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
-        	throw new Exception("error, could not get IEPID for storedEntityMetaData:"+storedEntityMetaData.toString());
+        	throw new Exception("error, could not get IEPID for storedEntityMetaData:"+storedEntityMetaData.toString() +" of type " + entitytype);
         }
-        log.info("SLUBStoragePlugin.getStreamRelativePath iepid=" + iepid);
+        log.info("SLUBStoragePlugin.getStreamRelativePath iepid=" + iepid + " (entitytype="+ entitytype +")");
         // get creationDate of "objectCharacteristics"
         String datestring = iedoc.getSectionKeyValue("objectCharacteristics", "creationDate");
         Calendar date = Calendar.getInstance();
