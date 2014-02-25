@@ -15,9 +15,6 @@ import com.exlibris.core.sdk.storage.containers.StoredEntityMetaData;
 import com.exlibris.digitool.common.dnx.DnxDocument;
 import com.exlibris.digitool.common.dnx.DnxSection;
 import com.exlibris.digitool.common.dnx.DnxSectionRecord;
-import com.exlibris.digitool.common.dnx.DnxRecordKey;
-import com.exlibris.digitool.common.storage.Fixity;
-import com.exlibris.digitool.infrastructure.utils.Checksummer;
 import com.exlibris.dps.repository.plugin.storage.nfs.NFSStoragePlugin;
 
 /**
