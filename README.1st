@@ -12,4 +12,10 @@ clean: clean up directory
 doc: compile javadoc description
 all: compile and build SLUBStoragePlugin.jar
 
+To install, do following:
+
+* copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/ on target system
+* copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/deploy on target system
+* use dps user to restart rosetta: "su dps; dps_restart"
+
 If any questions ask andreas.romeyke@slub-dresden.de
