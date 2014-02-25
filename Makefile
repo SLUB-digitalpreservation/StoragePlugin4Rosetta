@@ -63,7 +63,7 @@ SLUBStoragePlugin.jar: $(OBJS)
 	@cd build; ${JAVAPATH}/jar cfvM ../$@ ./* ; cd ..
 
 %.class: %.java
-	${JAVAPATH}/javac -classpath ${CLASSPATH}:${JUNITCLASSPATH} -Xlint:deprecation $< 
+	${JAVAPATH}/javac -classpath ${CLASSPATH}:${JUNITCLASSPATH} -Xlint:all $< 
 
 doc: $(SOURCES)
 	javadoc -d doc/ $^

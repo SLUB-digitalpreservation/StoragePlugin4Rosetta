@@ -126,7 +126,8 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
         log.info("SLUBStoragePlugin.getStreamDirectory path=" + path);
         log.info("SLUBStoragePlugin.getStreamDirectory fileName=" + fileName);
         log.info("SLUBStoragePlugin.getStreamDirectory newDir.getAbsolutePath()=" + newDir.getAbsolutePath());
-        newDir.mkdirs();
+        boolean arecreated = newDir.mkdirs();
+        log.info("SLUBStoragePlugin.getStreamDirectory newDir.mkdirs(), directories are created:" + arecreated);
         return new File(newDir.getAbsolutePath() + File.separator + fileName);
     }
  
