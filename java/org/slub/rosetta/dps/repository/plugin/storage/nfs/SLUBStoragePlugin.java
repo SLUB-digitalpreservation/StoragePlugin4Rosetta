@@ -22,11 +22,11 @@ import com.exlibris.digitool.common.storage.Fixity.FixityAlgorithm;
 
 /**
  * SLUBStoragePlugin
- * writes all IEs, files and so on into the same dir under yyyy/mm/dd/IEpid/
+ * writes all IEs, files etc. into the same directory under yyyy/mm/dd/IEpid/
  * 
  * HINT: this plugin is *only* useful to store AIPs (IEs + files) in
- *       permanent storage. Otherwise it could not detect the IE-PID and
- *       will report an error.
+ *       permanent storage. Otherwise (e.g in the case of SIPs) it can't
+ *       detect the IE-PID and will report an error.
  *
  * the fixities will only be checked if files are stored (storeEntity()), 
  * because the Rosetta API does not give enough information about available
@@ -64,7 +64,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
 
   /** copied from NFS Storage Plugin, enhanced with debugging info, 
    * stores InputStream on Storage in given format and does fixity check
-   * if written sucessfully
+   * to see if written sucessfully
    * @param is InputStream
    * @param storedEntityMetadata storedEntityMetaData
    * @return relative path to file
