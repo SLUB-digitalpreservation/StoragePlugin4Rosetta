@@ -1,21 +1,21 @@
-The plugin is based on NFSStoragePlugin and writes files in format
-/yyyy/mm/dd/IEPID. Please note, that th pluign could only be used as plugin to
+The plugin is based on the NFSStoragePlugin and writes files in a format like
+"/yyyy/mm/dd/IEPID". Please note that the pluign can only be used as plugin to
 handle IEs on permanent storage, otherwise it would fail with a NULL-Pointer
-exceptions, because a SIP (as an exampled) does not have an IEPID yet.
+exception, because a SIP (as an example) does not have an IEPID yet.
 
 To compile the plugin, ensure that the SDK and NFSStorage plugin is located in
-/exlibris as described in Makefile.
+"/exlibris" as described in the Makefile.
 
 The targets for "make" are:
 
 clean: clean up directory
-doc: compile javadoc description
-all: compile and build SLUBStoragePlugin.jar
+doc:   compile javadoc description
+all:   compile and build SLUBStoragePlugin.jar
 
-To install, do following:
+To install, do the following:
 
 * copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/ on target system
 * copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/deploy on target system
-* use dps user to restart rosetta: "su dps; dps_restart"
+* use dps user to restart Rosetta: "su dps; dps_restart"
 
-If any questions ask andreas.romeyke@slub-dresden.de
+If you have any questions, feel free to ask andreas.romeyke@slub-dresden.de
