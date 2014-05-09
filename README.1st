@@ -3,8 +3,8 @@ The plugin is based on the NFSStoragePlugin and writes files in a format like
 handle IEs on permanent storage, otherwise it would fail with a NULL-Pointer
 exception, because a SIP (as an example) does not have an IEPID yet.
 
-To compile the plugin, ensure that the SDK and NFSStorage plugin is located in
-"/exlibris" as described in the Makefile.
+To compile the plugin, ensure that the SDK and NFSStoragePlugin.jar is located
+in "/exlibris" as described in the Makefile.
 
 The targets for "make" are:
 
