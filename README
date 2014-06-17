@@ -1,0 +1,12 @@
+Plugin for Rosetta to organize storage structure in a format like
+"/yyyy/mm/dd/IEPID/".
+
+Rosetta is a digital preservation software by ExLibrisGroup, see
+http://www.exlibrisgroup.com/de/ for details.
+
+Our¹ code contribution is licenced via Apache License Version 2.0.
+
+See http://www.apache.org/licenses/LICENSE-2.0 for details.
+
+--
+¹ original code by Exlibrisgroup Ltd. is marked explicitely in comments
