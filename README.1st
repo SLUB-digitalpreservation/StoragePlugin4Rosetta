@@ -1,7 +1,12 @@
-The plugin is based on the NFSStoragePlugin and writes files in a format like
-"/yyyy/mm/dd/IEPID". Please note that the pluign can only be used as plugin to
-handle IEs on permanent storage, otherwise it would fail with a NULL-Pointer
-exception, because a SIP (as an example) does not have an IEPID yet.
+The plugin is based on the NFSStoragePlugin and writes directories in a format
+like "/yyyy/mm/dd/IEPID/". The reason for this plugin was to group all files of
+an AIP together in one directory. In contrast to the NFSStoragePlugin, the
+date-path is not based on individual file creation date, but on SIP creation
+date.
+
+Please note that the plugin can only be used to handle IEs on permanent
+storage, otherwise it would fail with a NULL-Pointer exception,  because a SIP
+(as an example) does not have an IEPID yet.
 
 To compile the plugin, ensure that the SDK and NFSStoragePlugin.jar is located
 in "/exlibris" as described in the Makefile.
@@ -14,8 +19,10 @@ all:   compile and build SLUBStoragePlugin.jar
 
 To install, do the following:
 
-* copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/ on target system
-* copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/deploy on target system
+* copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/ on target
+  system
+* copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/deploy on
+  target system
 * use dps user to restart Rosetta: "su dps; dps_restart"
 
 If you have any questions, feel free to ask andreas.romeyke@slub-dresden.de
