@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dps-sdk-3.2.2">
+    <CLASSES>
+      <root url="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-3.2.2/lib/dps-sdk-3.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="NFSStoragePlugin">
+    <CLASSES>
+      <root url="jar:///exlibris/dps/d4_1/system.dir/bundled_plugins/NFSStoragePlugin.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
