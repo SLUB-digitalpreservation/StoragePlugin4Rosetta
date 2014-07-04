@@ -20,14 +20,6 @@ limitations under the License.
 
 package org.slub.rosetta.dps.repository.plugin.storage.nfs;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Iterator;
 import com.exlibris.core.infra.common.exceptions.logging.ExLogger;
 import com.exlibris.core.infra.common.util.IOUtil;
 import com.exlibris.core.sdk.storage.containers.StoredEntityMetaData;
@@ -36,8 +28,13 @@ import com.exlibris.digitool.common.dnx.DnxSection;
 import com.exlibris.digitool.common.dnx.DnxSectionRecord;
 import com.exlibris.dps.repository.plugin.storage.nfs.NFSStoragePlugin;
 
-import com.exlibris.digitool.common.storage.Fixity;
-import com.exlibris.digitool.common.storage.Fixity.FixityAlgorithm;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * SLUBStoragePlugin
@@ -68,20 +65,7 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
     log.info("SLUBStoragePlugin instantiated");
   }
 
-  /** retrieves a list of available checksum fixities 
-   * @param storedEntityMetaData storedEntityMetaData 
-   * @return list of available fixities
-   */
-  protected List<Fixity> getAvailableFixities(StoredEntityMetaData storedEntityMetaData) {
-    List<Fixity> fixities = storedEntityMetaData.getFixities();
-    for (Iterator<Fixity> iter = fixities.iterator(); iter.hasNext(); ) {
-      Fixity element = iter.next();
-      log.info("getAvailableFixities fixity=" + element.toString() );
-    }
-    return fixities;
-  }
-
-  /** copied from NFS Storage Plugin, enhanced with debugging info, 
+  /** copied from NFS Storage Plugin, enhanced with debugging info,
    * stores InputStream on Storage in given format and does fixity check
    * to see if written sucessfully
    * @param is InputStream
@@ -145,13 +129,12 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
     String iepid = null;
     log.info ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
     List<DnxSectionRecord> records = iesec.getRecordList();
-    for (Iterator<DnxSectionRecord> iter = records.iterator(); iter.hasNext(); ) {
-      DnxSectionRecord element = iter.next();
-      if (element.getKeyById("internalIdentifierType").getValue().equals("PID")) {
-        iepid = element.getKeyById("internalIdentifierValue").getValue(); // found IEPID
-        break;
+      for (DnxSectionRecord element : records) {
+          if (element.getKeyById("internalIdentifierType").getValue().equals("PID")) {
+              iepid = element.getKeyById("internalIdentifierValue").getValue(); // found IEPID
+              break;
+          }
       }
-    }
     // raise Exception if IEPID is null
     if (null == iepid) {
       log.error ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
@@ -162,8 +145,9 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
     String datestring = iedoc.getSectionKeyValue("objectCharacteristics", "creationDate");
     Calendar date = Calendar.getInstance();
     // date ist there stored in format (example): 2014-01-15 14:28:01
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    sdf.setLenient(false); /* if parse errors, do not guess about */
+    SimpleDateFormat sdf;
+      sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      sdf.setLenient(false); /* if parse errors, do not guess about */
     Date d = sdf.parse(datestring);
     date.setTime(d);
     log.info("SLUBStoragePlugin.getStreamRelativePath creation Date read=" + datestring + " parsed=" + date.toString());
