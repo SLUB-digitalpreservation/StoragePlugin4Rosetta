@@ -65,47 +65,6 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
     log.info("SLUBStoragePlugin instantiated");
   }
 
-  /** copied from NFS Storage Plugin, enhanced with debugging info,
-   * stores InputStream on Storage in given format and does fixity check
-   * to see if written sucessfully
-   * @param is InputStream
-   * @param storedEntityMetadata storedEntityMetaData
-   * @return relative path to file
-   */
-  @Override
-  public String storeEntity(InputStream is, StoredEntityMetaData storedEntityMetadata) throws Exception {
-    log.info("SLUBStoragePlugin.storeEntity() called");
-    String fileName = createFileName(storedEntityMetadata);
-    log.info("SLUBStoragePlugin.storeEntity() fileName="+fileName);
-    String relativeDirectoryPath = getStreamRelativePath(storedEntityMetadata);
-    log.info("SLUBStoragePlugin.storeEntity() relativeDirectoryPath="+relativeDirectoryPath);
-    File destFile = getStreamDirectory(relativeDirectoryPath, fileName);
-    log.info("SLUBStoragePlugin.storeEntity() destfile.getAbsolutePath()="+destFile.getAbsolutePath());
-
-    // debug
-    // List<Fixity> fixities = getAvailableFixities( storedEntityMetadata );
-
-    // better move/link
-    if (canHandleSourcePath(storedEntityMetadata.getCurrentFilePath())) {
-      is.close(); // close input stream so that 'move' can work, we don't use it anyway
-      copyStream(storedEntityMetadata.getCurrentFilePath(), destFile.getAbsolutePath());
-    }
-    // default way - copy from input stream
-    else {
-      IOUtil.copy(is, new FileOutputStream(destFile));
-    }
-    String storedEntityIdentifier = relativeDirectoryPath + File.separator + fileName;
-    log.info("SLUBStoragePlugin.storeEntity() storedEntityIdentifier="+storedEntityIdentifier);
-    // check if stored correctly 
-    if(!checkFixity(storedEntityMetadata.getFixities(), storedEntityIdentifier)) {
-      log.error("error, SLUBStoragePlugin.storeEntity() has written corrupted files (checked via checkFixity()), storedEntityIdentifier="+storedEntityIdentifier);
-      deleteEntity(storedEntityIdentifier); // delete corrupt files
-      return null;
-    }
-    // return only relative (not absolute) path
-    return storedEntityIdentifier;
-  }
-
   /** prepare right path
    * path should be of form yyyy/MM/dd/IE-PID/
    * we need to findout the associated dnx document (IE),

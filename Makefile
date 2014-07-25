@@ -7,7 +7,7 @@
 JAVAPATH=$(wildcard /usr/lib/jvm/java-1.6.0-openjdk-*/bin/)
 
 # Verwendete Rosetta-Version
-ROSETTAVERSION=3.2.2
+ROSETTAVERSION=4.0.0
 
 # Pfad zum Rosetta-SDK
 ROSETTASDK=/exlibris/dps/d4_1/system.dir/dps-sdk-${ROSETTAVERSION}/lib/
