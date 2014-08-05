@@ -17,6 +17,11 @@ clean: clean up directory
 doc:   compile javadoc description
 all:   compile and build SLUBStoragePlugin.jar
 
+HINT: if you update the code you should also increase the value of the xpath 
+'pl:metadata-config/pl:version' in the file
+PLUGIN-INF/metadata_SLUBStoragePlugin.xml to ensure Rosetta recognizes
+the updated plugin
+
 To install, do the following:
 
 * copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/ on target
