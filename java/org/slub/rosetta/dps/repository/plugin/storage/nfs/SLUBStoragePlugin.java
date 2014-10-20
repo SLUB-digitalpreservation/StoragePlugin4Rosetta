@@ -138,11 +138,13 @@ public class SLUBStoragePlugin extends NFSStoragePlugin {
 
   /** copied from NFS Storage Plugin, enhanced with debugging info, {@inheritDoc} */
   private boolean canHandleSourcePath(String srcPath) {
+    log.info("SLUBStoragePlugin.canHandleSourcePath path=" + srcPath);
     try {
       File file = new File(srcPath);
       return file.canRead();
     }
     catch (Exception e) {
+      log.warn("SLUBStoragePlugin.canHandleSourcePath exception=" + e.getMessage());
       return false;
     }
   }
