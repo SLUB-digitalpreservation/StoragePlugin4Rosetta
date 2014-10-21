@@ -58,7 +58,7 @@ SLUBStoragePlugin.jar: $(OBJS)
 	@cp -r PLUGIN-INF/ build/
 	@cp -r META-INF/ build/
 	@cd java; find ./ -name "*.class" -print -exec cp --parents -r \{\} $(PWD)/build \; ; cd ..
-	@cp /exlibris/dps/d4_1/system.dir/bundled_plugins/NFSStoragePlugin.jar build/
+	#@cp /exlibris/dps/d4_1/system.dir/bundled_plugins/NFSStoragePlugin.jar build/
 	#cd build; ${JAVAPATH}/jar xfz /exlibris/dps/d4_1/system.dir/bundled_plugins/NFSStoragePlugin.jar
 	@cd build; ${JAVAPATH}/jar cfvM ../$@ ./* ; cd ..
 
