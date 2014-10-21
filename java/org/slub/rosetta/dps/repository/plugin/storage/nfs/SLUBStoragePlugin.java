@@ -130,7 +130,6 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                 }
                 finally
                 {
-                    Checksummer checksummer;
                     if (is != null) {
                         is.close();
                     }
@@ -142,8 +141,8 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
 
     public boolean deleteEntity(String storedEntityIdentifier)
     {
-        log.info("SLUBStoragePlugin.deleteEntity()");
-        File file = new File((String)this.parameters.get("DIR_ROOT") + storedEntityIdentifier);
+        log.info("SLUBStoragePlugin.deleteEntity() storedEntityIdentifier='" + storedEntityIdentifier + "'");
+        File file = new File(this.parameters.get("DIR_ROOT") + storedEntityIdentifier);
         try
         {
             return file.delete();
@@ -164,7 +163,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
     public String getFullFilePath(String storedEntityIdentifier)
     {
         log.info("SLUBStoragePlugin.getFullFilePath() with '" + storedEntityIdentifier + "'");
-        return (String)this.parameters.get("DIR_ROOT") + storedEntityIdentifier;
+        return this.parameters.get("DIR_ROOT") + storedEntityIdentifier;
     }
 
     public InputStream retrieveEntity(String storedEntityIdentifier)
@@ -177,7 +176,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             throws IOException
     {
         log.info("SLUBStoragePlugin.retrieveEntity() with '" + storedEntityIdentifier + "' isrelative=" + isRelative);
-        return new FileInputStream((isRelative ? (String)this.parameters.get("DIR_ROOT") : "") + storedEntityIdentifier);
+        return new FileInputStream((isRelative ? this.parameters.get("DIR_ROOT") : "") + storedEntityIdentifier);
     }
     public byte[] retrieveEntityByRange(String storedEntityIdentifier, long start, long end)
             throws Exception
@@ -187,7 +186,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         RandomAccessFile file = null;
         try
         {
-            file = new RandomAccessFile((String)this.parameters.get("DIR_ROOT") + storedEntityIdentifier, "r");
+            file = new RandomAccessFile(this.parameters.get("DIR_ROOT") + storedEntityIdentifier, "r");
             file.seek(start);
             file.readFully(bytes, 0, (int)(end - start + 1L));
             return bytes;
@@ -211,7 +210,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
     {
         log.info("SLUBStoragePlugin.storeEntity()");
         String existsDescPath = getFilePathInDescIfExists(storedEntityMetadata);
-        log.info("SLUBStoragePlugin.storeEntity() existsDescPath='" + existsDescPath +"'");
+        log.debug("SLUBStoragePlugin.storeEntity() existsDescPath='" + existsDescPath + "'");
         String destFilePath = null;
 
         boolean isCopyFileNeeded = true;
@@ -220,18 +219,18 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             destFilePath = existsDescPath;
             isCopyFileNeeded = !checkFixity(storedEntityMetadata.getFixities(), destFilePath, false);
         }
-        log.info("SLUBStoragePlugin.storeEntity() destFilePath='" + destFilePath +"'");
+        log.debug("SLUBStoragePlugin.storeEntity() destFilePath='" + destFilePath + "'");
         Map<String, String> paths = getStoreEntityIdentifier(storedEntityMetadata, destFilePath);
-        String storedEntityIdentifier = (String)paths.get("relativeDirectoryPath");
-        log.info("SLUBStoragePlugin.storeEntity() storedEntityIdentifier='" + storedEntityIdentifier +"'");
-        destFilePath = (String)paths.get("destFilePath");
-        log.info("SLUBStoragePlugin.storeEntity() destFilePath (2)='" + destFilePath +"'");
-        log.info("SLUBStoragePlugin.storeEntity() isCopyFileNeeded='" + isCopyFileNeeded +"'");
+        String storedEntityIdentifier = paths.get("relativeDirectoryPath");
+        log.debug("SLUBStoragePlugin.storeEntity() storedEntityIdentifier='" + storedEntityIdentifier + "'");
+        destFilePath = paths.get("destFilePath");
+        log.debug("SLUBStoragePlugin.storeEntity() destFilePath (2)='" + destFilePath + "'");
+        log.debug("SLUBStoragePlugin.storeEntity() isCopyFileNeeded='" + isCopyFileNeeded + "'");
         if (isCopyFileNeeded)
         {
             if (canHandleSourcePath(storedEntityMetadata.getCurrentFilePath()))
             {
-                log.info("SLUBStoragePlugin.storeEntity() destFilePath canhandle sourcepath");
+                log.debug("SLUBStoragePlugin.storeEntity() destFilePath canhandle sourcepath");
                 if (is != null) {
                     is.close();
                 }
@@ -239,7 +238,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             }
             else
             {
-                log.info("SLUBStoragePlugin.storeEntity() Cannot handle source path: " + storedEntityMetadata.getCurrentFilePath());
+                log.debug("SLUBStoragePlugin.storeEntity() Cannot handle source path: " + storedEntityMetadata.getCurrentFilePath());
                 if (is == null)
                 {
                     log.warn("SLUBStoragePlugin.storeEntity() InputStream is null");
@@ -250,7 +249,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                 {
                     output = new FileOutputStream(new File(destFilePath));
                     IOUtil.copy(is, output);
-                    log.info("SLUBStoragePlugin.storeEntity() try copy was successfull");
+                    log.debug("SLUBStoragePlugin.storeEntity() try copy was successfull");
                 }
                 finally
                 {
@@ -262,22 +261,22 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                 return null;
             }
         }
-        log.info("SLUBStoragePlugin.storeEntity() storedEntityIdentifier (2)='" + storedEntityIdentifier +"'");
+        log.debug("SLUBStoragePlugin.storeEntity() storedEntityIdentifier (2)='" + storedEntityIdentifier + "'");
         return storedEntityIdentifier;
     }
     protected void copyStream(StoredEntityMetaData storedEntityMetadata, String destPath)
             throws IOException
     {
         log.info("SLUBStoragePlugin.copyStream()");
-        String filesHandlingMethod = (String)this.parameters.get("FILES_HANDLING_METHOD");
+        String filesHandlingMethod = this.parameters.get("FILES_HANDLING_METHOD");
         String srcPath = storedEntityMetadata.getCurrentFilePath();
-        log.info("SLUBStoragePlugin.copyStream() destPath='" + destPath + "'");
-        log.info("SLUBStoragePlugin.copyStream() srcPath='" + srcPath + "'");
-        log.info("SLUBStoragePlugin.copyStream() filesHandlingMethod='" + filesHandlingMethod + "'");
+        log.debug("SLUBStoragePlugin.copyStream() destPath='" + destPath + "'");
+        log.debug("SLUBStoragePlugin.copyStream() srcPath='" + srcPath + "'");
+        log.debug("SLUBStoragePlugin.copyStream() filesHandlingMethod='" + filesHandlingMethod + "'");
         String pid = storedEntityMetadata.getEntityPid();
-        log.info("SLUBStoragePlugin.copyStream() pid='" + pid + "'");
+        log.debug("SLUBStoragePlugin.copyStream() pid='" + pid + "'");
         String iePid = storedEntityMetadata.getIePid();
-        log.info("SLUBStoragePlugin.copyStream() iePid='" + iePid + "'");
+        log.debug("SLUBStoragePlugin.copyStream() iePid='" + iePid + "'");
         if ("move".equalsIgnoreCase(filesHandlingMethod))
         {
             File canonicalSrcFile = getCanonicalFile(srcPath);
@@ -306,6 +305,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             return null;
         }
         String existsDescPath = StorageUtil.readDestPathFromTmpFile(storedEntityMetadata.getIePid(), tmpFilePath, storedEntityMetadata.getEntityPid());
+        log.debug("SLUBStoragePlugin.getFilePathInDescIfExists() existsDescPath='" + existsDescPath + "'");
         return existsDescPath;
     }
 
@@ -330,7 +330,9 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             Fixity.FixityAlgorithm fixityAlgorithm = Fixity.FixityAlgorithm.valueOf(algorithm);
             return fixityAlgorithm.ordinal();
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+            log.info("SLUBStoragePlugin.getChecksummerAlgorithm(), exception: " + e.getMessage());
+        }
         return -1;
     }
 
@@ -342,10 +344,9 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
     {
         log.info("SLUBStoragePlugin.getCanonicalFile() srcPath='"+ srcPath + "'");
         String fileName = srcPath.split("\\" + File.separator)[(srcPath.split("\\" + File.separator).length - 1)];
-        File canonicalSrcDir = null;
         try
         {
-            canonicalSrcDir = new File(srcPath).getParentFile().getCanonicalFile();
+            File canonicalSrcDir = new File(srcPath).getParentFile().getCanonicalFile();
             return new File(canonicalSrcDir, fileName).getCanonicalFile();
         }
         catch (IOException e) {
@@ -354,32 +355,23 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         return null;
     }
 
-    private String getNextDir(String fullPath)
-    {
-        log.info("SLUBStoragePlugin.getNextDir() fullPath='"+ fullPath + "'");
 
-        String[] dirs = fullPath.split("\\" + File.separator);
-        String dir = dirs[(dirs.length - 2)];
-        log.info("SLUBStoragePlugin.getNextDir() dir='" + dir + "'");
-        return dir;
-    }
     private Map<String, String> getStoreEntityIdentifier(StoredEntityMetaData storedEntityMetadata, String destFilePath) throws Exception
     {
-        log.info("SLUBStoragePlugin.getStoreEntityIdentifier()");
-        log.info("destFilePath='" + destFilePath +"'");
+        log.info("SLUBStoragePlugin.getStoreEntityIdentifier() destFilePath='" + destFilePath +"'");
         Map<String, String> paths = new HashMap<String, String>();
-        log.info( "(1) storedEntityMetadata is null?" + (null == storedEntityMetadata));
+        log.debug("(1) storedEntityMetadata is null?" + (null == storedEntityMetadata));
         String fileName = createFileName(storedEntityMetadata);
-        log.info("fileName='"+fileName +"'");
-        log.info( "(2) storedEntityMetadata is null?" + (null == storedEntityMetadata));
+        log.debug("fileName='" + fileName + "'");
+        log.debug("(2) storedEntityMetadata is null?" + (null == storedEntityMetadata));
         String relativeDirectoryPath = getStreamRelativePath(storedEntityMetadata);
-        log.info("relativeDirectoryPath='"+relativeDirectoryPath +"'");
+        log.debug("relativeDirectoryPath='" + relativeDirectoryPath + "'");
         if (destFilePath == null)
         {
             File destFile = getStreamDirectory(relativeDirectoryPath, fileName);
             destFilePath = destFile.getAbsolutePath();
         }
-        log.info("destFilePath (2)='" + destFilePath +"'");
+        log.debug("destFilePath (2)='" + destFilePath + "'");
         paths.put("destFilePath", destFilePath);
         // paths.put("relativeDirectoryPath", (relativeDirectoryPath + getNextDir(destFilePath) + File.separator + fileName));
         paths.put("relativeDirectoryPath", (relativeDirectoryPath + File.separator + fileName));
@@ -392,9 +384,9 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
     private File getStreamDirectory(String path, String fileName) {
         log.info("SLUBStoragePlugin.getStreamDirectory path='" + path + "' fileName='" + fileName + "'");
         File newDir = new File(parameters.get(DIR_ROOT) + File.separator + path);
-        log.info("SLUBStoragePlugin.getStreamDirectory newDir.getAbsolutePath()=" + newDir.getAbsolutePath());
+        log.debug("SLUBStoragePlugin.getStreamDirectory newDir.getAbsolutePath()=" + newDir.getAbsolutePath());
         boolean arecreated = newDir.mkdirs();
-        log.info("SLUBStoragePlugin.getStreamDirectory newDir.mkdirs(), directories are created:" + arecreated);
+        log.debug("SLUBStoragePlugin.getStreamDirectory newDir.mkdirs(), directories are created:" + arecreated);
         return new File(newDir.getAbsolutePath() + File.separator + fileName);
     }
     /** prepare right path
@@ -409,26 +401,26 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
     private String getStreamRelativePath(StoredEntityMetaData storedEntityMetaData ) throws Exception {
         log.info("SLUBStoragePlugin.getStreamRelativePath()");
         if ((null == storedEntityMetaData)) throw new AssertionError();
-        log.info("SLUBStoragePlugin.getStreamRelativePath() assert fine");
+        log.debug("SLUBStoragePlugin.getStreamRelativePath() assert fine");
         String relativeDirectoryPath = File.separator;
         // get IE PID by calling IE-DNX record and search for ""internalIdentifierType" == "PID"
         DnxDocument iedoc = storedEntityMetaData.getIeDnx();
-        log.info("SLUBStoragePlugin.getStreamRelativePath() getIeDnx fine");
+        log.debug("SLUBStoragePlugin.getStreamRelativePath() getIeDnx fine");
         if (null == iedoc) {
             log.error ("SLUBStoragePlugin.getStreamRelativePath no iedoc found, do you use plugin for others than permanent data? You should not!");
             throw new Exception("error, no iedoc found, do you use plugin for others than permanent data? You should not!");
         }
         StoredEntityMetaData.EntityType entityType = storedEntityMetaData.getEntityType();
-        log.info("SLUBStoragePlugin.getStreamRelativePath() getEntityType fine");
+        log.debug("SLUBStoragePlugin.getStreamRelativePath() getEntityType fine");
         String entitytype = entityType.name();
-        log.info("entitytype='" + entitytype + "'");
+        log.debug("entitytype='" + entitytype + "'");
         DnxSection iesec = iedoc.getSectionById("internalIdentifier");
         if (null == iesec) {
             log.error ("SLUBStoragePlugin.getStreamRelativePath no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data? You should not!");
             throw new Exception("error, no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data? You should not!");
         }
         String iepid = null;
-        log.info ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
+        log.debug("SLUBStoragePlugin.getStreamRelativePath iesec=" + iesec.toString());
         List<DnxSectionRecord> records = iesec.getRecordList();
         for (DnxSectionRecord element : records) {
             if (element.getKeyById("internalIdentifierType").getValue().equals("PID")) {
@@ -441,7 +433,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             log.error ("SLUBStoragePlugin.getStreamRelativePath iesec="+iesec.toString() );
             throw new Exception("error, could not get IEPID for storedEntityMetaData:"+storedEntityMetaData.toString() +" of type " + entitytype);
         }
-        log.info("SLUBStoragePlugin.getStreamRelativePath iepid=" + iepid + " (entitytype="+ entitytype +")");
+        log.debug("SLUBStoragePlugin.getStreamRelativePath iepid=" + iepid + " (entitytype=" + entitytype + ")");
         // get creationDate of "objectCharacteristics"
         String datestring = iedoc.getSectionKeyValue("objectCharacteristics", "creationDate");
         Calendar date = Calendar.getInstance();
@@ -451,7 +443,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         sdf.setLenient(false); /* if parse errors, do not guess about */
         Date d = sdf.parse(datestring);
         date.setTime(d);
-        log.info("SLUBStoragePlugin.getStreamRelativePath creation Date read=" + datestring + " parsed=" + date.toString());
+        log.debug("SLUBStoragePlugin.getStreamRelativePath creation Date read=" + datestring + " parsed=" + date.toString());
         // now create path in format /yyyy/MM/dd/IEPID/
         relativeDirectoryPath = relativeDirectoryPath + new SimpleDateFormat("yyyy").format(d);
         relativeDirectoryPath = relativeDirectoryPath + File.separator;
@@ -471,7 +463,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         log.info("SLUBStoragePlugin.hardLink srcPath='" + srcPath + "' destPath='" + destPath + "'");
         String command = "ln";
         ExecExternalProcess proc = new ExecExternalProcess();
-        List<String> args = new LinkedList();
+        List<String> args = new LinkedList<String>();
         args.add(srcPath);
         args.add(destPath);
         int retValue = proc.execExternalProcess(command, args);
@@ -482,21 +474,25 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
     private void saveDestPathsTmpFile(String folder, String key, String path)
     {
         log.info("SLUBStoragePlugin.saveDestPathsTmpFile()");
-        log.info("SLUBStoragePlugin.saveDestPathsTmpFile folder='" + folder + "'");
-        log.info("SLUBStoragePlugin.saveDestPathsTmpFile key='" + key + "'");
-        log.info("SLUBStoragePlugin.saveDestPathsTmpFile path='" + path + "'");
+        log.debug("SLUBStoragePlugin.saveDestPathsTmpFile folder='" + folder + "'");
+        log.debug("SLUBStoragePlugin.saveDestPathsTmpFile key='" + key + "'");
+        log.debug("SLUBStoragePlugin.saveDestPathsTmpFile path='" + path + "'");
         if (folder == null) {
             return;
         }
         String tmpFilePath = getTempStorageDirectory(false) + "destPath";
-        log.info("SLUBStoragePlugin.saveDestPathsTmpFile tmpFilePath='" + tmpFilePath + "'");
+        log.debug("SLUBStoragePlugin.saveDestPathsTmpFile tmpFilePath='" + tmpFilePath + "'");
         File destPathDir = new File(getTempStorageDirectory(false) + "destPath" + File.separator);
-        log.info("SLUBStoragePlugin.saveDestPathsTmpFile destPathDir='" + destPathDir + "'");
+        log.debug("SLUBStoragePlugin.saveDestPathsTmpFile destPathDir='" + destPathDir + "'");
         if (!destPathDir.exists()) {
-            destPathDir.mkdirs();
+            boolean res = destPathDir.mkdirs();
+            if (!res) {
+                log.error("SLUBStoragePlugin.saveDestPathsTmpFile() destPathdir='" + destPathDir + "' could not be created");
+            }
         }
         StorageUtil.saveDestPathToTmpFile(folder, tmpFilePath, key, path);
     }
+
     private void softLink(String srcPath, String destPath)
             throws IOException
     {
@@ -507,7 +503,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         }
         String command = "ln";
         ExecExternalProcess proc = new ExecExternalProcess();
-        List<String> args = new ArrayList();
+        List<String> args = new ArrayList<String>();
         args.add("-s");
         args.add(srcPath);
         args.add(destPath);

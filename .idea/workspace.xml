@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="3ad7d15b-0167-4c60-a3f9-2d3c54aea812" name="Default" comment="">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/ant.xml" />
@@ -84,58 +88,16 @@
       <file leaf-file-name="SLUBStoragePlugin.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33205375" vertical-offset="5302" max-vertical-offset="8025">
-              <caret line="365" column="42" selection-start-line="365" selection-start-column="42" selection-end-line="365" selection-end-column="42" />
+            <state vertical-scroll-proportion="1.248366" vertical-offset="1332" max-vertical-offset="7965">
+              <caret line="127" column="25" selection-start-line="127" selection-start-column="25" selection-end-line="127" selection-end-column="25" />
               <folding>
-                <element signature="e#0#24417#0" expanded="true" />
+                <element signature="e#0#24439#0" expanded="true" />
                 <element signature="imports" expanded="true" />
                 <element signature="e#3017#3018#0" expanded="true" />
                 <element signature="e#3075#3076#0" expanded="true" />
-                <element signature="e#15717#15733#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StorageUtil.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/handler/StorageUtil.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.0" vertical-offset="0" max-vertical-offset="465">
-              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StoredEntityMetaData.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/containers/StoredEntityMetaData.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.16" vertical-offset="466" max-vertical-offset="1290">
-              <caret line="44" column="56" selection-start-line="44" selection-start-column="56" selection-end-line="44" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AbstractStorageHandler.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/handler/AbstractStorageHandler.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.0" vertical-offset="0" max-vertical-offset="720">
-              <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NFSStoragePlugin.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/java/org/slub/rosetta/dps/repository/plugin/storage/nfs/NFSStoragePlugin.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="102.85185" vertical-offset="6362" max-vertical-offset="6885">
-              <caret line="239" column="38" selection-start-line="239" selection-start-column="38" selection-end-line="239" selection-end-column="38" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#12505#12506#0" expanded="true" />
-                <element signature="e#12561#12562#0" expanded="true" />
+                <element signature="e#15518#15534#0" expanded="true" />
+                <element signature="e#22145#22153#0" expanded="true" />
+                <element signature="e#24094#24102#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -175,10 +137,52 @@
           <State>
             <id>General</id>
           </State>
+          <State>
+            <id>Imports</id>
+          </State>
+          <State>
+            <id>Initialization issues</id>
+          </State>
+          <State>
+            <id>J2ME issues</id>
+          </State>
+          <State>
+            <id>Java language level issues</id>
+          </State>
+          <State>
+            <id>Javadoc issues</id>
+          </State>
+          <State>
+            <id>Logging issues</id>
+          </State>
+          <State>
+            <id>Memory issues</id>
+          </State>
+          <State>
+            <id>Method metrics</id>
+          </State>
+          <State>
+            <id>Modularization issues</id>
+          </State>
+          <State>
+            <id>Naming conventions</id>
+          </State>
+          <State>
+            <id>Packaging issues</id>
+          </State>
+          <State>
+            <id>Performance issues</id>
+          </State>
+          <State>
+            <id>Portability issues</id>
+          </State>
+          <State>
+            <id>Probable bugs</id>
+          </State>
         </expanded-state>
         <selected-state>
           <State>
-            <id>WrongPackageStatement</id>
+            <id>StaticVariableUninitializedUse</id>
           </State>
         </selected-state>
       </profile-state>
@@ -407,7 +411,7 @@
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32954547" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -420,11 +424,11 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21826425" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.06282383" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
     </layout>
   </component>
@@ -457,11 +461,13 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2775">
           <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding>
-            <element signature="e#0#24417#0" expanded="true" />
+            <element signature="e#0#24439#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#3017#3018#0" expanded="true" />
             <element signature="e#3075#3076#0" expanded="true" />
-            <element signature="e#15717#15733#0" expanded="true" />
+            <element signature="e#15518#15534#0" expanded="true" />
+            <element signature="e#22145#22153#0" expanded="true" />
+            <element signature="e#24094#24102#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -483,42 +489,20 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="675" max-vertical-offset="2370">
           <caret line="45" column="2" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#24417#0" expanded="true" />
+            <element signature="e#0#24439#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#3017#3018#0" expanded="true" />
             <element signature="e#3075#3076#0" expanded="true" />
-            <element signature="e#15717#15733#0" expanded="true" />
+            <element signature="e#15518#15534#0" expanded="true" />
+            <element signature="e#22145#22153#0" expanded="true" />
+            <element signature="e#24094#24102#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/containers/StoredEntityMetaData.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.16" vertical-offset="466" max-vertical-offset="1290">
-          <caret line="44" column="56" selection-start-line="44" selection-start-column="56" selection-end-line="44" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/handler/AbstractStorageHandler.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.0" vertical-offset="0" max-vertical-offset="720">
-          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/handler/StorageUtil.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.0" vertical-offset="0" max-vertical-offset="465">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/java/org/slub/rosetta/dps/repository/plugin/storage/nfs/NFSStoragePlugin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="102.85185" vertical-offset="6362" max-vertical-offset="6885">
+        <state vertical-scroll-proportion="-6.0238614" vertical-offset="6362" max-vertical-offset="6885">
           <caret line="239" column="38" selection-start-line="239" selection-start-column="38" selection-end-line="239" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -528,16 +512,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/handler/AbstractStorageHandler.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16198704" vertical-offset="0" max-vertical-offset="720">
+          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/containers/StoredEntityMetaData.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3760504" vertical-offset="466" max-vertical-offset="1290">
+          <caret line="44" column="56" selection-start-line="44" selection-start-column="56" selection-end-line="44" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///exlibris/dps/d4_1/system.dir/dps-sdk-4.0.0/lib/dps-sdk-4.0.0.jar!/com/exlibris/core/sdk/storage/handler/StorageUtil.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16198704" vertical-offset="0" max-vertical-offset="465">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/java/org/slub/rosetta/dps/repository/plugin/storage/nfs/SLUBStoragePlugin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33205375" vertical-offset="5302" max-vertical-offset="8025">
-          <caret line="365" column="42" selection-start-line="365" selection-start-column="42" selection-end-line="365" selection-end-column="42" />
+        <state vertical-scroll-proportion="1.248366" vertical-offset="1332" max-vertical-offset="7965">
+          <caret line="127" column="25" selection-start-line="127" selection-start-column="25" selection-end-line="127" selection-end-column="25" />
           <folding>
-            <element signature="e#0#24417#0" expanded="true" />
+            <element signature="e#0#24439#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#3017#3018#0" expanded="true" />
             <element signature="e#3075#3076#0" expanded="true" />
-            <element signature="e#15717#15733#0" expanded="true" />
+            <element signature="e#15518#15534#0" expanded="true" />
+            <element signature="e#22145#22153#0" expanded="true" />
+            <element signature="e#24094#24102#0" expanded="true" />
           </folding>
         </state>
       </provider>
