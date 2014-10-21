@@ -6,7 +6,7 @@
 		<fr:x_form xmlns:fr="http://com/exlibris/digitool/common/forms/xmlbeans">
 			<form_name>SLUBStoragePlugin_Params</form_name>
 			<description>SLUBTreeStoragePlugin_parameters_form</description>
-			<version>0.1</version>
+			<version>0.2</version>
 			<grid_x>1</grid_x>
 			<md_format>1</md_format>
 			<x_fields>
@@ -70,7 +70,7 @@
 		</fr:x_form>
 	</pl:initParameters>
 	<pl:description>SLUB Storage Plugin</pl:description>
-	<pl:version>1.6</pl:version>
+	<pl:version>2.4</pl:version>
 	<pl:materialType>DIGITAL</pl:materialType>
 	<pl:module>Repository</pl:module>
 	<pl:generalType>TASK</pl:generalType>
