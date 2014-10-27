@@ -55,6 +55,7 @@ distclean: clean
 
 SLUBStoragePlugin.jar: $(OBJS)
 	@mkdir build;
+	@find ./ -name "*~" -exec rm -f \{\} \;
 	@cp -r PLUGIN-INF/ build/
 	@cp -r META-INF/ build/
 	@cd java; find ./ -name "*.class" -print -exec cp --parents -r \{\} $(PWD)/build \; ; cd ..
