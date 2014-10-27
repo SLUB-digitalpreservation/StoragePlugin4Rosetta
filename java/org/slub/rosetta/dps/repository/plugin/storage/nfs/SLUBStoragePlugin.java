@@ -93,17 +93,20 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                 log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.MD5=" + Fixity.FixityAlgorithm.MD5.toString());
                 log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.SHA1=" + Fixity.FixityAlgorithm.SHA1.toString());
                 log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.CRC32=" + Fixity.FixityAlgorithm.CRC32.toString());
-                if (Fixity.FixityAlgorithm.MD5.toString().toLowerCase().equals(fixity.getAlgorithm().toLowerCase()))
+                /* TODO: with upcoming versions of Rosetta, recheck need of
+                 * Workaround for fixity.getAlgorithm() */
+                String algorithm = fixity.getAlgorithm().toUpperCase(); // workaround, because fixity.getAlgorithm() returns lowercase string
+                if (Fixity.FixityAlgorithm.MD5.toString().equals(algorithm))
                 {
                     log.info("SLUBStoragePlugin.checkFixity() calcMD5=true");
                     calcMD5 = true;
                 }
-                else if (Fixity.FixityAlgorithm.SHA1.toString().toLowerCase().equals(fixity.getAlgorithm().toLowerCase()))
+                else if (Fixity.FixityAlgorithm.SHA1.toString().equals(algorithm))
                 {
                     log.info("SLUBStoragePlugin.checkFixity() calcSHA1=true");
                     calcSHA1 = true;
                 }
-                else if (Fixity.FixityAlgorithm.CRC32.toString().toLowerCase().equals(fixity.getAlgorithm().toLowerCase()))
+                else if (Fixity.FixityAlgorithm.CRC32.toString().equals(algorithm))
                 {
                     log.info("SLUBStoragePlugin.checkFixity() calcCRC32=true");
                     calcCRC32 = true;
@@ -131,14 +134,17 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                     Checksummer checksummer = new Checksummer(is, calcMD5, calcSHA1, calcCRC32);
                     for (Fixity fixity : fixities)
                     {
-                        int checksummerAlgorithmIndex = getChecksummerAlgorithmIndex(fixity.getAlgorithm());
+                      /* TODO: with upcoming versions of Rosetta, recheck need of
+                       * Workaround for fixity.getAlgorithm() */
+                        String algorithm = fixity.getAlgorithm().toUpperCase(); // workaround, because fixity.getAlgorithm() returns lowercase string
+                        int checksummerAlgorithmIndex = getChecksummerAlgorithmIndex(algorithm);
                         if (checksummerAlgorithmIndex != -1)
                         {
                             log.info("SLUBStoragePlugin.checkFixity() checksummerAlgorithmIndex=" + checksummerAlgorithmIndex);
                             String oldValue = fixity.getValue();
-                            log.info("SLUBStoragePlugin.checkFixity() getAlgorithm (2)=" + fixity.getAlgorithm());
+                            log.info("SLUBStoragePlugin.checkFixity() getAlgorithm (2)=" + algorithm);
                             log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
-                            fixity.setValue(checksummer.getChecksum(fixity.getAlgorithm()));
+                            fixity.setValue(checksummer.getChecksum(algorithm));
                             log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
                             fixity.setResult(Boolean.valueOf((oldValue == null) || (oldValue.equalsIgnoreCase(fixity.getValue()))));
                             result &= fixity.getResult().booleanValue();
