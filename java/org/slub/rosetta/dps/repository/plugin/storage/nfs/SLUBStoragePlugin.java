@@ -89,17 +89,21 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             for (Fixity fixity : fixities)
             {
                 fixity.setResult(null);
-                if (Fixity.FixityAlgorithm.MD5.toString().equals(fixity.getAlgorithm()))
+                log.info("SLUBStoragePlugin.checkFixity() getAlgorithm=" + fixity.getAlgorithm());
+                log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.MD5=" + Fixity.FixityAlgorithm.MD5.toString());
+                log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.SHA1=" + Fixity.FixityAlgorithm.SHA1.toString());
+                log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.CRC32=" + Fixity.FixityAlgorithm.CRC32.toString());
+                if (Fixity.FixityAlgorithm.MD5.toString().toLowerCase().equals(fixity.getAlgorithm().toLowerCase()))
                 {
                     log.info("SLUBStoragePlugin.checkFixity() calcMD5=true");
                     calcMD5 = true;
                 }
-                else if (Fixity.FixityAlgorithm.SHA1.toString().equals(fixity.getAlgorithm()))
+                else if (Fixity.FixityAlgorithm.SHA1.toString().toLowerCase().equals(fixity.getAlgorithm().toLowerCase()))
                 {
                     log.info("SLUBStoragePlugin.checkFixity() calcSHA1=true");
                     calcSHA1 = true;
                 }
-                else if (Fixity.FixityAlgorithm.CRC32.toString().equals(fixity.getAlgorithm()))
+                else if (Fixity.FixityAlgorithm.CRC32.toString().toLowerCase().equals(fixity.getAlgorithm().toLowerCase()))
                 {
                     log.info("SLUBStoragePlugin.checkFixity() calcCRC32=true");
                     calcCRC32 = true;
@@ -132,7 +136,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                         {
                             log.info("SLUBStoragePlugin.checkFixity() checksummerAlgorithmIndex=" + checksummerAlgorithmIndex);
                             String oldValue = fixity.getValue();
-                            log.info("SLUBStoragePlugin.checkFixity() getAlgorithm=" + fixity.getAlgorithm());
+                            log.info("SLUBStoragePlugin.checkFixity() getAlgorithm (2)=" + fixity.getAlgorithm());
                             log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
                             fixity.setValue(checksummer.getChecksum(fixity.getAlgorithm()));
                             log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
