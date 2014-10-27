@@ -91,26 +91,35 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                 fixity.setResult(null);
                 if (Fixity.FixityAlgorithm.MD5.toString().equals(fixity.getAlgorithm()))
                 {
+                    log.info("SLUBStoragePlugin.checkFixity() calcMD5=true");
                     calcMD5 = true;
                 }
                 else if (Fixity.FixityAlgorithm.SHA1.toString().equals(fixity.getAlgorithm()))
                 {
+                    log.info("SLUBStoragePlugin.checkFixity() calcSHA1=true");
                     calcSHA1 = true;
                 }
                 else if (Fixity.FixityAlgorithm.CRC32.toString().equals(fixity.getAlgorithm()))
                 {
+                    log.info("SLUBStoragePlugin.checkFixity() calcCRC32=true");
                     calcCRC32 = true;
                 }
                 else
                 {
+                    log.info("SLUBStoragePlugin.checkFixity() another fixity");
+                    log.info("SLUBStoragePlugin.checkFixity() pluginname=" + fixity.getPluginName());
                     String oldValue = fixity.getValue();
+                    log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
                     fixity.setValue(getChecksumUsingPlugin(isRelativePath ? getLocalFilePath(storedEntityIdentifier) : storedEntityIdentifier, fixity.getPluginName(), oldValue));
                     fixity.setResult(Boolean.valueOf((oldValue == null) || (oldValue.equals(fixity.getValue()))));
+                    log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
                     result &= fixity.getResult().booleanValue();
+                    log.info("SLUBStoragePlugin.checkFixity() result=" + result);
                 }
             }
             if ((calcMD5) || (calcSHA1) || (calcCRC32))
             {
+                log.info("SLUBStoragePlugin.checkFixity() calcMD5|calcSHA1|calcCRC32=true");
                 InputStream is = null;
                 try
                 {
@@ -121,16 +130,23 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                         int checksummerAlgorithmIndex = getChecksummerAlgorithmIndex(fixity.getAlgorithm());
                         if (checksummerAlgorithmIndex != -1)
                         {
+                            log.info("SLUBStoragePlugin.checkFixity() checksummerAlgorithmIndex=" + checksummerAlgorithmIndex);
                             String oldValue = fixity.getValue();
+                            log.info("SLUBStoragePlugin.checkFixity() getAlgorithm=" + fixity.getAlgorithm());
+                            log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
                             fixity.setValue(checksummer.getChecksum(fixity.getAlgorithm()));
+                            log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
                             fixity.setResult(Boolean.valueOf((oldValue == null) || (oldValue.equalsIgnoreCase(fixity.getValue()))));
                             result &= fixity.getResult().booleanValue();
+                            log.info("SLUBStoragePlugin.checkFixity() result=" + result);
                         }
                     }
                 }
                 finally
                 {
+                    log.info("SLUBStoragePlugin.checkFixity() finally called");
                     if (is != null) {
+                      log.info("SLUBStoragePlugin.checkFixity()is closed");
                         is.close();
                     }
                 }
