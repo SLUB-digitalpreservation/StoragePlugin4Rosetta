@@ -34,6 +34,7 @@ import com.exlibris.digitool.common.storage.Fixity;
 import com.exlibris.digitool.infrastructure.utils.Checksummer;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -83,85 +84,86 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         boolean result = true;
         if (fixities != null)
         {
-            boolean calcMD5 = false;
-            boolean calcSHA1 = false;
-            boolean calcCRC32 = false;
-            for (Fixity fixity : fixities)
-            {
-                fixity.setResult(null);
-                log.info("SLUBStoragePlugin.checkFixity() getAlgorithm=" + fixity.getAlgorithm());
-                log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.MD5=" + Fixity.FixityAlgorithm.MD5.toString());
-                log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.SHA1=" + Fixity.FixityAlgorithm.SHA1.toString());
-                log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.CRC32=" + Fixity.FixityAlgorithm.CRC32.toString());
+            InputStream is = null;
+            try {
+                is = retrieveEntity(storedEntityIdentifier, isRelativePath);
+                Checksummer checksummer = new Checksummer(is, true, true, true);
+                for (Fixity fixity : fixities) {
+                    fixity.setResult(null);
+                    log.info("SLUBStoragePlugin.checkFixity() getAlgorithm=" + fixity.getAlgorithm());
+                    log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.MD5=" + Fixity.FixityAlgorithm.MD5.toString());
+                    log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.SHA1=" + Fixity.FixityAlgorithm.SHA1.toString());
+                    log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.CRC32=" + Fixity.FixityAlgorithm.CRC32.toString());
                 /* TODO: with upcoming versions of Rosetta, recheck need of
                  * Workaround for fixity.getAlgorithm() */
-                String algorithm = fixity.getAlgorithm().toUpperCase(); // workaround, because fixity.getAlgorithm() returns lowercase string
-                if (Fixity.FixityAlgorithm.MD5.toString().equals(algorithm))
-                {
-                    log.info("SLUBStoragePlugin.checkFixity() calcMD5=true");
-                    calcMD5 = true;
-                }
-                else if (Fixity.FixityAlgorithm.SHA1.toString().equals(algorithm))
-                {
-                    log.info("SLUBStoragePlugin.checkFixity() calcSHA1=true");
-                    calcSHA1 = true;
-                }
-                else if (Fixity.FixityAlgorithm.CRC32.toString().equals(algorithm))
-                {
-                    log.info("SLUBStoragePlugin.checkFixity() calcCRC32=true");
-                    calcCRC32 = true;
-                }
-                else
-                {
-                    log.info("SLUBStoragePlugin.checkFixity() another fixity");
-                    log.info("SLUBStoragePlugin.checkFixity() pluginname=" + fixity.getPluginName());
-                    String oldValue = fixity.getValue();
-                    log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
-                    fixity.setValue(getChecksumUsingPlugin(isRelativePath ? getLocalFilePath(storedEntityIdentifier) : storedEntityIdentifier, fixity.getPluginName(), oldValue));
-                    fixity.setResult(Boolean.valueOf((oldValue == null) || (oldValue.equals(fixity.getValue()))));
-                    log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
-                    result &= fixity.getResult().booleanValue();
-                    log.info("SLUBStoragePlugin.checkFixity() result=" + result);
+                    String algorithm = fixity.getAlgorithm().toUpperCase(); // workaround, because fixity.getAlgorithm() returns lowercase string
+                    if (
+                            (!Fixity.FixityAlgorithm.MD5.toString().equals(algorithm)) &&
+                                    (!Fixity.FixityAlgorithm.SHA1.toString().equals(algorithm)) &&
+                                    (!Fixity.FixityAlgorithm.CRC32.toString().equals(algorithm))
+                            ) {
+                        result = checkFixityByPlugin(fixity, storedEntityIdentifier, isRelativePath, result);
+                    } else {
+                        log.info("SLUBStoragePlugin.checkFixity() calcMD5|calcSHA1|calcCRC32=true");
+                        int checksummerAlgorithmIndex = getChecksummerAlgorithmIndex(algorithm);
+                        log.info("SLUBStoragePlugin.checkFixity() checksummerAlgorithmIndex=" + checksummerAlgorithmIndex);
+                        if (checksummerAlgorithmIndex != -1)
+                            result = checkFixityByBuiltin(fixity, algorithm, checksummer, result);
+                    }
                 }
             }
-            if ((calcMD5) || (calcSHA1) || (calcCRC32))
+            finally
             {
-                log.info("SLUBStoragePlugin.checkFixity() calcMD5|calcSHA1|calcCRC32=true");
-                InputStream is = null;
-                try
-                {
-                    is = retrieveEntity(storedEntityIdentifier, isRelativePath);
-                    Checksummer checksummer = new Checksummer(is, calcMD5, calcSHA1, calcCRC32);
-                    for (Fixity fixity : fixities)
-                    {
-                      /* TODO: with upcoming versions of Rosetta, recheck need of
-                       * Workaround for fixity.getAlgorithm() */
-                        String algorithm = fixity.getAlgorithm().toUpperCase(); // workaround, because fixity.getAlgorithm() returns lowercase string
-                        int checksummerAlgorithmIndex = getChecksummerAlgorithmIndex(algorithm);
-                        if (checksummerAlgorithmIndex != -1)
-                        {
-                            log.info("SLUBStoragePlugin.checkFixity() checksummerAlgorithmIndex=" + checksummerAlgorithmIndex);
-                            String oldValue = fixity.getValue();
-                            log.info("SLUBStoragePlugin.checkFixity() getAlgorithm (2)=" + algorithm);
-                            log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
-                            fixity.setValue(checksummer.getChecksum(algorithm));
-                            log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
-                            fixity.setResult(Boolean.valueOf((oldValue == null) || (oldValue.equalsIgnoreCase(fixity.getValue()))));
-                            result &= fixity.getResult().booleanValue();
-                            log.info("SLUBStoragePlugin.checkFixity() result=" + result);
-                        }
-                    }
-                }
-                finally
-                {
-                    log.info("SLUBStoragePlugin.checkFixity() finally called");
-                    if (is != null) {
-                      log.info("SLUBStoragePlugin.checkFixity()is closed");
-                        is.close();
-                    }
+                log.info("SLUBStoragePlugin.checkFixity() finally called");
+                if (is != null) {
+                    log.info("SLUBStoragePlugin.checkFixity()is closed");
+                    is.close();
                 }
             }
         }
+        return result;
+    }
+
+    /** uses a checksummer object and check if fixity of given builtin algorithm is correct
+     *
+     * @param fixity concrete fixity object
+     * @param algorithm which algorithm should be used
+     * @param checksummer checksummer object of given input stream
+     * @param result result is boolean variable to hold states of all fixity checks
+     * @return result
+     * @throws NoSuchAlgorithmException
+     */
+    private boolean checkFixityByBuiltin(Fixity fixity, String algorithm, Checksummer checksummer, boolean result) throws NoSuchAlgorithmException {
+        String oldValue = fixity.getValue();
+        log.info("SLUBStoragePlugin.checkFixity() getAlgorithm (2)=" + algorithm);
+        log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
+        fixity.setValue(checksummer.getChecksum(algorithm));
+        log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
+        fixity.setResult((oldValue == null) || (oldValue.equalsIgnoreCase(fixity.getValue())));
+        result &= fixity.getResult().booleanValue();
+        log.info("SLUBStoragePlugin.checkFixity() result=" + result);
+        return result;
+    }
+
+    /** check fixity by calling its registered plugin
+     *
+     * @param fixity concrete fixity object
+     * @param storedEntityIdentifier path to file which should be checked
+     * @param isRelativePath indicates if path is relative
+     * @param result result is boolean variable to hold states of all fixity checks
+     * @return result
+     * @throws Exception
+     */
+    private boolean checkFixityByPlugin(Fixity fixity, String storedEntityIdentifier, boolean isRelativePath, boolean result) throws Exception {
+        log.info("SLUBStoragePlugin.checkFixity() another fixity");
+        log.info("SLUBStoragePlugin.checkFixity() pluginname=" + fixity.getPluginName());
+        String oldValue = fixity.getValue();
+        log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
+        fixity.setValue(getChecksumUsingPlugin(isRelativePath ? getLocalFilePath(storedEntityIdentifier) : storedEntityIdentifier, fixity.getPluginName(), oldValue));
+        fixity.setResult((oldValue == null) || (oldValue.equals(fixity.getValue())));
+        log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
+        result &= fixity.getResult().booleanValue();
+        log.info("SLUBStoragePlugin.checkFixity() result=" + result);
         return result;
     }
 
@@ -348,6 +350,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         }
     }
 
+    /** copied from NFS Storage Plugin, enhanced with debugging info, {@inheritDoc} */
     private int getChecksummerAlgorithmIndex(String algorithm)
     {
         log.info("SLUBStoragePlugin.getChecksummerAlgorithm() algorithm='" + algorithm + "'");
@@ -365,7 +368,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
 
 
 
-
+    /** copied from NFS Storage Plugin, enhanced with debugging info, {@inheritDoc} */
     private File getCanonicalFile(String srcPath)
     {
         log.info("SLUBStoragePlugin.getCanonicalFile() srcPath='"+ srcPath + "'");
@@ -381,7 +384,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         return null;
     }
 
-
+    /** copied from NFS Storage Plugin, enhanced with debugging info, {@inheritDoc} */
     private Map<String, String> getStoreEntityIdentifier(StoredEntityMetaData storedEntityMetadata, String destFilePath) throws Exception
     {
         log.info("SLUBStoragePlugin.getStoreEntityIdentifier() destFilePath='" + destFilePath +"'");
@@ -483,6 +486,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         return relativeDirectoryPath;
     }
 
+    /** copied from NFS Storage Plugin, enhanced with debugging info, {@inheritDoc} */
     private void hardLink(String srcPath, String destPath)
             throws IOException
     {
@@ -497,6 +501,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             throw new IOException("ln " + srcPath + " " + destPath + " failed " + proc.getErrorStream() + proc.getInputStream());
         }
     }
+    /** copied from NFS Storage Plugin, enhanced with debugging info, {@inheritDoc} */
     private void saveDestPathsTmpFile(String folder, String key, String path)
     {
         log.info("SLUBStoragePlugin.saveDestPathsTmpFile()");
@@ -519,6 +524,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         StorageUtil.saveDestPathToTmpFile(folder, tmpFilePath, key, path);
     }
 
+    /** copied from NFS Storage Plugin, enhanced with debugging info, {@inheritDoc} */
     private void softLink(String srcPath, String destPath)
             throws IOException
     {
@@ -538,14 +544,4 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             throw new IOException("ln -s " + srcPath + " " + destPath + " failed " + proc.getErrorStream() + proc.getInputStream());
         }
     }
-
-
-
-
-
-
-
-
-
-
 }

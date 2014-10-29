@@ -70,7 +70,7 @@
 		</fr:x_form>
 	</pl:initParameters>
 	<pl:description>SLUB Storage Plugin</pl:description>
-	<pl:version>2.804</pl:version>
+	<pl:version>2.805</pl:version>
 	<pl:materialType>DIGITAL</pl:materialType>
 	<pl:module>Repository</pl:module>
 	<pl:generalType>TASK</pl:generalType>
