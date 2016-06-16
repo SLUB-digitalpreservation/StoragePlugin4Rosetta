@@ -1,6 +1,6 @@
 /*
 
-2014 by Andreas Romeyke (SLUB Dresden)
+2014-2016 by Andreas Romeyke (SLUB Dresden)
 
 The code contributed by SLUB is licensed under apache 2.0 and based partially
 on NFS Storage Plugin, 
@@ -436,8 +436,8 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         DnxDocument iedoc = storedEntityMetaData.getIeDnx();
         log.debug("SLUBStoragePlugin.getStreamRelativePath() getIeDnx fine");
         if (null == iedoc) {
-            log.error ("SLUBStoragePlugin.getStreamRelativePath no iedoc found, do you use plugin for others than permanent data? You should not!");
-            throw new Exception("error, no iedoc found, do you use plugin for others than permanent data? You should not!");
+            log.error ("SLUBStoragePlugin.getStreamRelativePath no iedoc found, do you use plugin for others than permanent data (IE and filestream)? You should not! Also do not use it for SIPstoragePermanentGroup!");
+            throw new Exception("error, no iedoc found, do you use plugin for others than permanent data (IE and filestream)? You should not! Also do not use it for SIPstoragePermanentGroup!");
         }
         StoredEntityMetaData.EntityType entityType = storedEntityMetaData.getEntityType();
         log.debug("SLUBStoragePlugin.getStreamRelativePath() getEntityType fine");
@@ -445,8 +445,8 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
         log.debug("entitytype='" + entitytype + "'");
         DnxSection iesec = iedoc.getSectionById("internalIdentifier");
         if (null == iesec) {
-            log.error ("SLUBStoragePlugin.getStreamRelativePath no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data? You should not!");
-            throw new Exception("error, no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data? You should not!");
+            log.error ("SLUBStoragePlugin.getStreamRelativePath no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data (IE and filestream)? You should not! Also do not use it for SIPstoragePermanentGroup!");
+            throw new Exception("error, no section in entity of type "+entitytype +" with 'internalIdentfier' in associated iedoc found, do you use plugin for others than permanent data (IE and filestream)? You should not! Also do not use it for SIPstoragePermanentGroup!");
         }
         String iepid = null;
         log.debug("SLUBStoragePlugin.getStreamRelativePath iesec=" + iesec.toString());
