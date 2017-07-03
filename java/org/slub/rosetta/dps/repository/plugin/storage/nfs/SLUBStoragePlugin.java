@@ -89,22 +89,24 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
                 is = retrieveEntity(storedEntityIdentifier, isRelativePath);
                 Checksummer checksummer = new Checksummer(is, true, true, true);
                 for (Fixity fixity : fixities) {
-                    fixity.setResult(null);
+                    fixity.setResult(false);
                     log.info("SLUBStoragePlugin.checkFixity() getAlgorithm=" + fixity.getAlgorithm());
                     log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.MD5=" + Fixity.FixityAlgorithm.MD5.toString());
                     log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.SHA1=" + Fixity.FixityAlgorithm.SHA1.toString());
+                    log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.SHA256=" + Fixity.FixityAlgorithm.SHA256.toString());
                     log.info("SLUBStoragePlugin.checkFixity() FixityAlgorithm.CRC32=" + Fixity.FixityAlgorithm.CRC32.toString());
                 /* TODO: with upcoming versions of Rosetta, recheck need of
                  * Workaround for fixity.getAlgorithm() */
                     String algorithm = fixity.getAlgorithm().toUpperCase(); // workaround, because fixity.getAlgorithm() returns lowercase string
                     if (
                             (!Fixity.FixityAlgorithm.MD5.toString().equals(algorithm)) &&
-                                    (!Fixity.FixityAlgorithm.SHA1.toString().equals(algorithm)) &&
-                                    (!Fixity.FixityAlgorithm.CRC32.toString().equals(algorithm))
-                            ) {
+                            (!Fixity.FixityAlgorithm.SHA1.toString().equals(algorithm)) &&
+                            (!Fixity.FixityAlgorithm.SHA256.toString().equals(algorithm)) &&
+                            (!Fixity.FixityAlgorithm.CRC32.toString().equals(algorithm))
+                    ) {
                         result = checkFixityByPlugin(fixity, storedEntityIdentifier, isRelativePath, result);
                     } else {
-                        log.info("SLUBStoragePlugin.checkFixity() calcMD5|calcSHA1|calcCRC32=true");
+                        log.info("SLUBStoragePlugin.checkFixity() calcMD5|calcSHA1|calcCRC32|calcSHA256=true");
                         int checksummerAlgorithmIndex = getChecksummerAlgorithmIndex(algorithm);
                         log.info("SLUBStoragePlugin.checkFixity() checksummerAlgorithmIndex=" + checksummerAlgorithmIndex);
                         if (checksummerAlgorithmIndex != -1)
@@ -157,8 +159,14 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
     private boolean checkFixityByPlugin(Fixity fixity, String storedEntityIdentifier, boolean isRelativePath, boolean result) throws Exception {
         log.info("SLUBStoragePlugin.checkFixity() another fixity");
         log.info("SLUBStoragePlugin.checkFixity() pluginname=" + fixity.getPluginName());
-        String oldValue = fixity.getValue();
-        log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
+        String oldValue = "";
+        try {
+            oldValue = fixity.getValue();
+            log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
+        }
+        catch (Exception e) {
+            log.warn("SLUBStoragePlugin failed to get previous fixity value for file  " + file.getPath(), e.getMessage());
+        }
         fixity.setValue(getChecksumUsingPlugin(isRelativePath ? getLocalFilePath(storedEntityIdentifier) : storedEntityIdentifier, fixity.getPluginName(), oldValue));
         fixity.setResult((oldValue == null) || (oldValue.equals(fixity.getValue())));
         log.info("SLUBStoragePlugin.checkFixity() newvalue=" + fixity.getValue());
