@@ -158,7 +158,12 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
      */
     private boolean checkFixityByPlugin(Fixity fixity, String storedEntityIdentifier, boolean isRelativePath, boolean result) throws Exception {
         log.info("SLUBStoragePlugin.checkFixity() another fixity");
-        log.info("SLUBStoragePlugin.checkFixity() pluginname=" + fixity.getPluginName());
+        try {
+            log.info("SLUBStoragePlugin.checkFixity() pluginname=" + fixity.getPluginName());
+        }
+        catch (Exception e) {
+            log.warn("SLUBStoragePlugin failed to get pluginname ", e.getMessage());
+        }
         String oldValue = "";
         try {
             oldValue = fixity.getValue();
