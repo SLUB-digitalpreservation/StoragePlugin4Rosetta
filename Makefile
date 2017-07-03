@@ -3,11 +3,11 @@
 # erzeugt Submission-Application, die vorbereitete Verzeichnisse per Java SDK
 # von ExLibris an Rosetta übergibt.
 
-# Pfad zu Java 7
-JAVAPATH=$(wildcard /usr/lib/jvm/java-1.7.0-openjdk-*/bin/)
+# Pfad zu Java
+JAVAPATH=$(wildcard /usr/lib/jvm/java-1.8.0-openjdk-*/bin/)
 
 # Verwendete Rosetta-Version
-ROSETTAVERSION=4.1.0
+ROSETTAVERSION=5.1.0
 
 # Pfad zum Rosetta-SDK
 ROSETTASDK=/exlibris/dps/d4_1/system.dir/dps-sdk-${ROSETTAVERSION}/lib/
