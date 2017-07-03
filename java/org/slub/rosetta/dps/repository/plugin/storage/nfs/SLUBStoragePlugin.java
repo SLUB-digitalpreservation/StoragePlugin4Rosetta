@@ -165,7 +165,7 @@ public class SLUBStoragePlugin extends AbstractStorageHandler {
             log.info("SLUBStoragePlugin.checkFixity() oldvalue=" + oldValue);
         }
         catch (Exception e) {
-            log.warn("SLUBStoragePlugin failed to get previous fixity value for file  " + file.getPath(), e.getMessage());
+            log.warn("SLUBStoragePlugin failed to get previous fixity value ", e.getMessage());
         }
         fixity.setValue(getChecksumUsingPlugin(isRelativePath ? getLocalFilePath(storedEntityIdentifier) : storedEntityIdentifier, fixity.getPluginName(), oldValue));
         fixity.setResult((oldValue == null) || (oldValue.equals(fixity.getValue())));
