@@ -22,4 +22,5 @@ requirements
 * create dir /operational_shared/plugins/custom/deploy if not exists
 * copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/
 * copy SLUBStoragePlugin.jar to /operational_shared/plugins/custom/deploy 
+* check owner for newly created directories and/or files: sudo chown -R dps:exlibris /operational_shared/plugins/custom/
 * use dps user to restart Rosetta: su dps; dps_restart
