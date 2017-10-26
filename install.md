@@ -1,10 +1,11 @@
 ## Installation
 ### Prerequisites
-* Java SDK 1.8
+* Java OpenJDK 1.8
 * git
 * gcc, make, ...
-* To compile the plugin, ensure that the SDK and NFSStoragePlugin.jar is located in "/exlibris" as described in the Makefile.
-* Check makefile for appropriate directories, file locations and Rosetta version
+* To compile the plugin, ensure that the NFSStoragePlugin.jar is located at ted at system.dir/bundled_plugins/NFSStoragePlugin.jar
+* Rosetta PluginSDK has to be found at /exlibris/dps/d4_1/system.dir/dps-sdk-${ROSETTAVERSION}/lib/
+* Check makefile for appropriate directories, file locations and *Rosetta version*
 
 ### Compile 
 
